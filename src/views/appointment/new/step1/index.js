@@ -27,6 +27,7 @@ function Step1(props) {
   }
 
   const fillField = (event) => {
+    console.log(userData)
     fetch(`https://ka6xhw.deta.dev/bi/${event?.target?.value}`)
       .then((response) => response.json())
       .then((data) => {

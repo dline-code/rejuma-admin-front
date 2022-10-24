@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState } from 'react'
 import {
   CButton,
   CRow,
@@ -27,14 +27,14 @@ import {
 import { cilPeople } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import { cilPlus as cilPlusIcon } from '@coreui/icons'
-import { AuthContext } from 'src/contexts/AuthContext'
+// import { AuthContext } from 'src/contexts/AuthContext'
 //import { SaveAppointmentForm } from './components/SaveAppointmentForm'
 import SaveAppointmentForm from './new/index'
 
-import api from 'src/services/api'
+// import api from 'src/services/api'
 
 function Appointment() {
-  const { user } = useContext(AuthContext)
+  // const { user } = useContext(AuthContext)
   const [matriculas, setMatriculas] = useState([])
   const [filteredData, setFilteredData] = useState([])
   const [filterBy, setFilterBy] = useState('')

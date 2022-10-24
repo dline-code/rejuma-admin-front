@@ -1,26 +1,26 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { CButton, CFormLabel, CFormInput, CFormSelect, CSpinner } from '@coreui/react'
 import { useHistory } from 'react-router-dom'
 import api from 'src/services/api'
 import Swal from 'sweetalert2'
-import { fetchTreatments } from '../services/useFetchTreatment'
+// import { fetchTreatments } from '../services/useFetchTreatment'
 
 export const SaveTreatmentForm = () => {
-  const [treatments, setTreatments] = useState([])
+  // const [treatments, setTreatments] = useState([])
   const [treatmentId, setTreatmentId] = useState('')
   const [price, setPrice] = useState('')
   const [loading, setLoading] = useState(false)
   const history = useHistory()
 
-  useEffect(() => {
-    fetchTreatments()
-      .then((result) => {
-        setTreatments(result)
-      })
-      .catch((error) => {
-        console.log(error?.response)
-      })
-  }, [])
+  // useEffect(() => {
+  //   fetchTreatments()
+  //     .then((result) => {
+  //       setTreatments(result)
+  //     })
+  //     .catch((error) => {
+  //       console.log(error?.response)
+  //     })
+  // }, [])
 
   const handleSubmit = async () => {
     setLoading(true)

@@ -19,6 +19,7 @@ function NewMatricula({ setIsModalOpen, onFormData = { function() {} } }) {
   }
 
   const handleStepChange = (e) => {
+    console.log(_)
     setActiveStep(e.activeStep - 1)
   }
 
