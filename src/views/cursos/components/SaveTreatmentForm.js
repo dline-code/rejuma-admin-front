@@ -43,21 +43,6 @@ export const SaveTreatmentForm = () => {
     history.go(0)
   }
 
-  const treatmentsAdapt = [
-    {
-      id: 1,
-      name: 'Professor',
-    },
-    {
-      id: 2,
-      name: 'Diretor',
-    },
-    {
-      id: 3,
-      name: 'Secretário',
-    },
-  ]
-
   return (
     <form>
       <div className="mb-3" width="100px">
