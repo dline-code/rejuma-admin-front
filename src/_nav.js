@@ -49,7 +49,12 @@ const _nav = [
     to: '/propinas',
     icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
   },
-
+  {
+    component: CNavItem,
+    name: 'Turnos',
+    to: '/turnos',
+    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
+  },
   {
     component: CNavItem,
     name: 'Estatísticas',
