@@ -20,28 +20,24 @@ const AuthProvider = ({ children }) => {
     if (token) {
       api.defaults.headers.common.Authorization = `Bearer ${JSON.parse(token)}`
       setAuthenticated(true)
-      recoverUserInfo().then(({ data }) => {
-        setUser(data)
-      })
+      // recoverUserInfo().then(({ data }) => {
+      //   setUser(data)
+      // })
     }
     setLoading(false)
   }, [])
 
   async function signIn({ contact, password }) {
     try {
-      const { data } = await api.post('/session', { contact, password })
-      console.log(data)
-      if (data?.user?.typeentity?.description === 'Cliente') {
-        window.location.href = 'https://zuri-box.com/'
-        return
-      }
+      const { data } = await api.post('/sessao', { email: contact, senha: password })
+      console.log('data=', data)
 
       localStorage.setItem('zuri-token', JSON.stringify(data.token))
-      localStorage.setItem('user-id', JSON.stringify(data.user.id))
+      //localStorage.setItem('user-id', JSON.stringify(data.user.id))
 
       api.defaults.headers.common.Authorization = `Bearer ${data.token}`
       setAuthenticated(true)
-      setUser(data.user)
+      setUser(data.existEmail)
       //history.push('/dashboard')
       window.location.href = '/#/dashboard'
     } catch (error) {

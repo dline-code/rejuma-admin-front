@@ -32,7 +32,7 @@ import { SaveTreatmentForm } from './components/SaveTreatmentForm'
 import api from 'src/services/api'
 import { useHistory } from 'react-router-dom'
 
-function Appointment() {
+function Funcionarios() {
   const [treatmentSalon, setTreatmentSalon] = useState([])
   const [filteredData, setFilteredData] = useState(treatmentSalon)
   const [filterBy, setFilterBy] = useState('')
@@ -203,4 +203,4 @@ function Appointment() {
   )
 }
 
-export default Appointment
+export default Funcionarios

@@ -12,7 +12,6 @@ import {
 import { cilBell, cilEnvelopeOpen, cilLockLocked, cilUser } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 
-// import avatar8 from './../../assets/images/avatars/8.jpg'
 import { AuthContext } from 'src/contexts/AuthContext'
 
 const AppHeaderDropdown = () => {

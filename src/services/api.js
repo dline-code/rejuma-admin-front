@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: 'https://zuri-api.herokuapp.com',
+  baseURL: 'https://rejuma.herokuapp.com',
 })
 
 api.interceptors.request.use((config) => {

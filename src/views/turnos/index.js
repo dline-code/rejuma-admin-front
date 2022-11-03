@@ -28,7 +28,6 @@ import { cilPlus as cilPlusIcon } from '@coreui/icons'
 import { TreatmentListItemActionsDropdown } from './components/ListItemActionsDropdown'
 import { useState } from 'react'
 import { SaveTreatmentForm } from './components/SaveTreatmentForm'
-// import { fetchTreatmentSalon } from './services/useFetchTreatmentSalon'
 import api from 'src/services/api'
 import { useHistory } from 'react-router-dom'
 import { fetchTurnos } from './services/useFetchTurnos'
@@ -60,7 +59,6 @@ function Appointment() {
   }, [])
 
   const handleEdit = () => {
-    console.log('delete')
     setIsModalOpen(true)
   }
 
@@ -113,7 +111,7 @@ function Appointment() {
         <CCard>
           <CCardHeader>Dados de Pesquisa</CCardHeader>
           <CCardBody>
-            <CForm>
+            <div>
               <CRow className="mb-3">
                 <CCol md="5">
                   <CFormLabel htmlFor="selectSm">Filtrar por</CFormLabel>
@@ -131,7 +129,7 @@ function Appointment() {
                   <CFormLabel htmlFor="pesq" onChange={(event) => setFilterBy(event.target.value)}>
                     Pesquisar
                   </CFormLabel>
-                  <CForm inline>
+                  <CForm>
                     <CFormInput
                       className="mr-sm-2"
                       placeholder="Search"
@@ -142,7 +140,7 @@ function Appointment() {
                   </CForm>
                 </CCol>
               </CRow>
-            </CForm>
+            </div>
           </CCardBody>
         </CCard>
         <br />
