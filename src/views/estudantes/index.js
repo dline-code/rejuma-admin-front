@@ -21,18 +21,19 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
+  CProgress,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import Swal from 'sweetalert2'
 import { cilPlus as cilPlusIcon } from '@coreui/icons'
-import { FuncionariosListItemActionsDropdown } from './components/ListItemActionsDropdown'
+import { EstudantesListItemActionsDropdown } from './components/ListItemActionsDropdown'
 import { useState } from 'react'
-import { SaveTreatmentForm } from './components/SaveTreatmentForm'
+import { SaveTreatmentForm } from './components/SaveEstudanteForm'
 // import { fetchTreatmentSalon } from './services/useFetchTreatmentSalon'
 import api from 'src/services/api'
 import { useHistory } from 'react-router-dom'
 
-function Funcionarios() {
+function Estudantes() {
   const [treatmentSalon, setTreatmentSalon] = useState([])
   const [filteredData, setFilteredData] = useState(treatmentSalon)
   const [filterBy, setFilterBy] = useState('')
@@ -158,7 +159,7 @@ function Funcionarios() {
                 marginBottom: '20px',
               }}
             >
-              <h4>Funcionários</h4>
+              <h4>Estudantes</h4>
 
               <CButton onClick={handleClickNewAppointment} size="sm" color="primary">
                 Novo
@@ -175,8 +176,11 @@ function Funcionarios() {
               <CTableHead>
                 <CTableRow>
                   <CTableHeaderCell scope="col">#</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Nome</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Cargo</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Nome Completo</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Género</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Classe</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Turma</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Estado</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Ações</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
@@ -185,9 +189,17 @@ function Funcionarios() {
                   <CTableRow key={id}>
                     <CTableHeaderCell scope="row">{idx + 1}</CTableHeaderCell>
                     <CTableDataCell>{nome}</CTableDataCell>
-                    <CTableDataCell>{cargo}</CTableDataCell>
+                    <CTableDataCell>Masculino</CTableDataCell>
+                    <CTableDataCell>10ª</CTableDataCell>
+                    <CTableDataCell>A12</CTableDataCell>
                     <CTableDataCell>
-                      <FuncionariosListItemActionsDropdown
+                      <div className="clearfix">
+                        <small className="text-medium-emphasis">Activo</small>
+                      </div>
+                      <CProgress thin color={'success'} value={100} />
+                    </CTableDataCell>
+                    <CTableDataCell>
+                      <EstudantesListItemActionsDropdown
                         onEdit={handleEdit}
                         onRemove={() => handleRemove(id)}
                       />
@@ -203,4 +215,4 @@ function Funcionarios() {
   )
 }
 
-export default Funcionarios
+export default Estudantes

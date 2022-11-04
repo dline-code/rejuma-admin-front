@@ -4,7 +4,7 @@ import { CDropdown, CDropdownItem, CDropdownMenu, CDropdownToggle } from '@coreu
 
 import PropTypes from 'prop-types'
 
-export const FuncionariosListItemActionsDropdown = ({ onEdit, onRemove }) => {
+export const EstudantesListItemActionsDropdown = ({ onEdit, onRemove }) => {
   return (
     <CDropdown>
       <CDropdownToggle color="primary">Ação</CDropdownToggle>
@@ -17,7 +17,7 @@ export const FuncionariosListItemActionsDropdown = ({ onEdit, onRemove }) => {
   )
 }
 
-FuncionariosListItemActionsDropdown.propTypes = {
+EstudantesListItemActionsDropdown.propTypes = {
   onEdit: PropTypes.func,
   onRemove: PropTypes.func,
 }

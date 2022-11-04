@@ -18,6 +18,11 @@ const _nav = [
         name: 'Efetuar matrícula',
         to: '/efectuar-matricula',
       },
+      {
+        component: CNavItem,
+        name: 'Ver estudantes',
+        to: '/estudantes',
+      },
       // {
       //   component: CNavItem,
       //   name: 'Cadastro',
