@@ -19,9 +19,9 @@ const Page500 = () => {
           <CCol md={6}>
             <span className="clearfix">
               <h1 className="float-start display-3 me-4">500</h1>
-              <h4 className="pt-3">Houston, we have a problem!</h4>
+              <h4 className="pt-3">Problema com o servidor!</h4>
               <p className="text-medium-emphasis float-start">
-                The page you are looking for is temporarily unavailable.
+                A página que você está procurando está temporariamente indisponível.
               </p>
             </span>
             <CInputGroup className="input-prepend">

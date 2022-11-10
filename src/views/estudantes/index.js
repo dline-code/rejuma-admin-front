@@ -91,7 +91,7 @@ function Estudantes() {
     setIsModalOpen((currentValue) => !currentValue)
   }
 
-  const fields = ['nome', 'cargo']
+  const fields = ['Classe', 'Período']
 
   return (
     <>

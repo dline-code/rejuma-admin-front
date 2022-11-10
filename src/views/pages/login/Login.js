@@ -19,13 +19,11 @@ import { cilLockLocked, cilUser } from '@coreui/icons'
 import { AuthContext } from 'src/contexts/AuthContext'
 
 const Login = () => {
-  const { signIn } = useContext(AuthContext)
-  const [loading, setLoading] = useState(false)
+  const { signIn, loading } = useContext(AuthContext)
   const [password, setPassword] = useState('')
   const [contact, setContact] = useState('')
 
   const handleSubmit = () => {
-    setLoading(true)
     const loginData = {
       contact,
       password,
@@ -80,11 +78,6 @@ const Login = () => {
                           Entrar
                         </CButton>
                       </CCol>
-                      {/* <CCol xs={6} className="text-right">
-                        <CButton color="link" className="px-0">
-                          Esqueceu sua senha??
-                        </CButton>
-                      </CCol> */}
                     </CRow>
                   </CForm>
                 </CCardBody>
