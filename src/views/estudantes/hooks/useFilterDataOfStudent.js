@@ -5,7 +5,6 @@ export function useFilterDataOfStudent() {
   const { studentDataByClass, studentDataByTurno } = useFetchEstudantes()
   const [filteredData, setFilteredData] = useState([])
   const [filterBy, setFilterBy] = useState('')
-  const [isModalOpen, setIsModalOpen] = useState()
   const fields = ['Classe', 'Período']
   const [searching, setSearching] = useState(false)
   const [studentData, setStudentData] = useState([])
@@ -56,8 +55,6 @@ export function useFilterDataOfStudent() {
     fields,
     filteredData,
     filterBy,
-    isModalOpen,
-    setIsModalOpen,
     setFilterBy,
     setFilteredData,
     handlefilterBy,

@@ -31,17 +31,17 @@ import { SaveTreatmentForm } from './components/SaveEstudanteForm'
 // import { fetchTreatmentSalon } from './services/useFetchTreatmentSalon'
 import api from 'src/services/api'
 import { useHistory } from 'react-router-dom'
+import { useState } from 'react'
 import { useFetchEstudantes } from './services/useFetchEstudantes'
 import { useFilterDataOfStudent } from './hooks/useFilterDataOfStudent'
 
 function Estudantes() {
   const history = useHistory()
+  const [isModalOpen, setIsModalOpen] = useState()
   const { fieldsClass, fieldsTurno } = useFetchEstudantes()
   const {
     fields,
     filterBy,
-    isModalOpen,
-    setIsModalOpen,
     FilterByClass,
     FilterByTurno,
     filteredData,
