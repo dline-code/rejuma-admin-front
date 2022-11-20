@@ -27,37 +27,29 @@ import CIcon from '@coreui/icons-react'
 import Swal from 'sweetalert2'
 import { cilPlus as cilPlusIcon } from '@coreui/icons'
 import { EstudantesListItemActionsDropdown } from './components/ListItemActionsDropdown'
-import { useState } from 'react'
 import { SaveTreatmentForm } from './components/SaveEstudanteForm'
 // import { fetchTreatmentSalon } from './services/useFetchTreatmentSalon'
 import api from 'src/services/api'
 import { useHistory } from 'react-router-dom'
+import { useFetchEstudantes } from './services/useFetchEstudantes'
+import { useFilterDataOfStudent } from './hooks/useFilterDataOfStudent'
 
 function Estudantes() {
-  const [treatmentSalon, setTreatmentSalon] = useState([])
-  const [filteredData, setFilteredData] = useState(treatmentSalon)
-  const [filterBy, setFilterBy] = useState('')
-  const [isModalOpen, setIsModalOpen] = useState()
   const history = useHistory()
-
-  const searchBy = (event) => {
-    const { value } = event.target
-    const newData = filteredData?.filter(
-      (item) => String(item[filterBy]).toLocaleLowerCase().indexOf(value.toLocaleLowerCase()) > -1,
-    )
-    setFilteredData(newData)
-  }
-
-  useEffect(() => {
-    const dataFunc = [
-      {
-        id: 1,
-        nome: 'Robson Manuel',
-        cargo: 'Dono',
-      },
-    ]
-    setTreatmentSalon(dataFunc)
-  }, [])
+  const { fieldsClass, fieldsTurno } = useFetchEstudantes()
+  const {
+    fields,
+    filterBy,
+    isModalOpen,
+    setIsModalOpen,
+    FilterByClass,
+    FilterByTurno,
+    filteredData,
+    handlefilterBy,
+    searchByName,
+    searching,
+    studentData,
+  } = useFilterDataOfStudent()
 
   const handleEdit = () => {
     console.log('delete')
@@ -91,8 +83,6 @@ function Estudantes() {
     setIsModalOpen((currentValue) => !currentValue)
   }
 
-  const fields = ['Classe', 'Período']
-
   return (
     <>
       <CModal visible={isModalOpen} onClose={() => setIsModalOpen(false)}>
@@ -117,7 +107,7 @@ function Estudantes() {
               <CRow className="mb-3">
                 <CCol md="5">
                   <CFormLabel htmlFor="selectSm">Filtrar por</CFormLabel>
-                  <CFormSelect name="selectSm" id="SelectLm" onChange={(e) => console.log(e)}>
+                  <CFormSelect name="selectSm" id="SelectLm" onChange={handlefilterBy}>
                     <option value="null">Please select</option>
                     {fields?.map((item, index) => (
                       <option key={index} value={item}>
@@ -126,18 +116,46 @@ function Estudantes() {
                     ))}
                     /
                   </CFormSelect>
+                  {filterBy === 'Classe' ? (
+                    <CFormSelect
+                      name="selectSm"
+                      id="SelectLm"
+                      className="mt-2"
+                      onChange={FilterByClass}
+                    >
+                      <option value="null">Please select your classe</option>
+                      {fieldsClass?.map((item, index) => (
+                        <option key={item.id} value={item.classe}>
+                          {item.classe}
+                        </option>
+                      ))}
+                    </CFormSelect>
+                  ) : null}
+                  {filterBy === 'Período' ? (
+                    <CFormSelect
+                      name="selectSm"
+                      id="SelectLm"
+                      className="mt-2"
+                      onChange={FilterByTurno}
+                    >
+                      <option value="null">Please select your classe</option>
+                      {fieldsTurno?.map((item, index) => (
+                        <option key={item.id} value={item.designacao}>
+                          {item.designacao}
+                        </option>
+                      ))}
+                    </CFormSelect>
+                  ) : null}
                 </CCol>
                 <CCol md="7">
-                  <CFormLabel htmlFor="pesq" onChange={(event) => setFilterBy(event.target.value)}>
-                    Pesquisar
-                  </CFormLabel>
+                  <CFormLabel htmlFor="pesq"> Pesquisar </CFormLabel>
                   <CForm inline>
                     <CFormInput
                       className="mr-sm-2"
                       placeholder="Search"
                       id="pesq"
                       style={{ width: '80%' }}
-                      onChange={searchBy}
+                      onChange={searchByName}
                     />
                     {/* <CButton color="outline-info" className="my-2 my-sm-0" type="submit">
                       Search
@@ -169,7 +187,7 @@ function Estudantes() {
             <div className="mb-40">
               <div className="mb-3" width="100px">
                 <CFormLabel htmlFor="exampleFormControlInput1">Pesquise por algo</CFormLabel>
-                <CFormInput type="search" id="exampleFormControlInput1" />
+                <CFormInput type="search" onChange={searchByName} id="exampleFormControlInput1" />
               </div>
             </div>
             <CTable>
@@ -177,7 +195,7 @@ function Estudantes() {
                 <CTableRow>
                   <CTableHeaderCell scope="col">#</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Nome Completo</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Género</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Turno</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Classe</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Turma</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Estado</CTableHeaderCell>
@@ -185,27 +203,49 @@ function Estudantes() {
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {treatmentSalon?.map(({ id, nome, cargo }, idx) => (
-                  <CTableRow key={id}>
-                    <CTableHeaderCell scope="row">{idx + 1}</CTableHeaderCell>
-                    <CTableDataCell>{nome}</CTableDataCell>
-                    <CTableDataCell>Masculino</CTableDataCell>
-                    <CTableDataCell>10ª</CTableDataCell>
-                    <CTableDataCell>A12</CTableDataCell>
-                    <CTableDataCell>
-                      <div className="clearfix">
-                        <small className="text-medium-emphasis">Activo</small>
-                      </div>
-                      <CProgress thin color={'success'} value={100} />
-                    </CTableDataCell>
-                    <CTableDataCell>
-                      <EstudantesListItemActionsDropdown
-                        onEdit={handleEdit}
-                        onRemove={() => handleRemove(id)}
-                      />
-                    </CTableDataCell>
-                  </CTableRow>
-                ))}
+                {!searching
+                  ? filteredData?.map(({ id, nome, classe, turma, turno }, idx) => (
+                      <CTableRow key={id}>
+                        <CTableHeaderCell scope="row">{idx + 1}</CTableHeaderCell>
+                        <CTableDataCell>{nome}</CTableDataCell>
+                        <CTableDataCell>{turno?.designacao}</CTableDataCell>
+                        <CTableDataCell>{classe?.classe}</CTableDataCell>
+                        <CTableDataCell>{turma?.nome}</CTableDataCell>
+                        <CTableDataCell>
+                          <div className="clearfix">
+                            <small className="text-medium-emphasis">Activo</small>
+                          </div>
+                          <CProgress thin color={'success'} value={100} />
+                        </CTableDataCell>
+                        <CTableDataCell>
+                          <EstudantesListItemActionsDropdown
+                            onEdit={handleEdit}
+                            onRemove={() => handleRemove(id)}
+                          />
+                        </CTableDataCell>
+                      </CTableRow>
+                    ))
+                  : studentData?.map(({ id, nome, classe, turma, turno }, idx) => (
+                      <CTableRow key={id}>
+                        <CTableHeaderCell scope="row">{idx + 1}</CTableHeaderCell>
+                        <CTableDataCell>{nome}</CTableDataCell>
+                        <CTableDataCell>{turno?.designacao}</CTableDataCell>
+                        <CTableDataCell>{classe?.classe}</CTableDataCell>
+                        <CTableDataCell>{turma?.nome}</CTableDataCell>
+                        <CTableDataCell>
+                          <div className="clearfix">
+                            <small className="text-medium-emphasis">Activo</small>
+                          </div>
+                          <CProgress thin color={'success'} value={100} />
+                        </CTableDataCell>
+                        <CTableDataCell>
+                          <EstudantesListItemActionsDropdown
+                            onEdit={handleEdit}
+                            onRemove={() => handleRemove(id)}
+                          />
+                        </CTableDataCell>
+                      </CTableRow>
+                    ))}
               </CTableBody>
             </CTable>
           </CCardBody>
