@@ -8,11 +8,14 @@ import Swal from 'sweetalert2'
 import Step1 from './step1'
 import Step2 from './step2'
 import Step3 from './step3'
+import { useRecordsContext } from 'src/contexts/RecordsContext'
+import api from 'src/services/api'
 
 function NewMatricula({ setIsModalOpen, onFormData = { function() {} } }) {
   const [_, setStepWizard] = useState(null)
-  const [user, setUser] = useState({})
   const [activeStep, setActiveStep] = useState(0)
+
+  const { applicant } = useRecordsContext()
 
   const assignStepWizard = (instance) => {
     setStepWizard(instance)
@@ -24,31 +27,29 @@ function NewMatricula({ setIsModalOpen, onFormData = { function() {} } }) {
   }
 
   const handleComplete = () => {
-    console.log('finnaly', user)
-    onFormData(user)
+    console.log('finnaly', applicant)
+    onFormData(applicant)
     Swal.fire({
       title: 'Tem certeza que deseja salvar?',
       showDenyButton: true,
       showCancelButton: true,
       confirmButtonText: 'Salvar',
       denyButtonText: `Não salvar`,
-    }).then((result) => {
+    }).then(async (result) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
+        const response = await api.post(`/matricula/post`, {
+          ...applicant,
+          tipoUsuarioId: 'beb7ad3d-3edf-4078-9f7b-0f098dab3679',
+          cursoId: 'a59a5af8-2ed8-4fad-b6e5-df5b998375e9',
+        })
+        console.log(response.data)
         Swal.fire('Salvo!', '', 'success')
         setIsModalOpen(false)
       } else if (result.isDenied) {
         Swal.fire('Dados não inseridos', '', 'info')
       }
     })
-  }
-
-  const assignUser = (val) => {
-    console.log(val)
-    setUser((user) => ({
-      ...user,
-      ...val,
-    }))
   }
 
   return (
@@ -64,9 +65,9 @@ function NewMatricula({ setIsModalOpen, onFormData = { function() {} } }) {
             <Step label="Confirmar" />
           </Stepper>
           <StepWizard instance={assignStepWizard} onStepChange={handleStepChange}>
-            <Step1 userCallback={assignUser} />
-            <Step2 user={user} userCallback={assignUser} />
-            <Step3 user={user} completeCallback={handleComplete} />
+            <Step1 />
+            <Step2 />
+            <Step3 completeCallback={handleComplete} />
           </StepWizard>
         </CCardBody>
       </CCard>

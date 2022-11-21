@@ -22,9 +22,15 @@ function ActionsButtons(props) {
           </CCol>
         )}
         <CCol>
-          {props.currentStep < props.totalSteps && <CButton onClick={handleNext}>Avançar</CButton>}
+          {props.currentStep < props.totalSteps && (
+            <CButton type="submit" onClick={handleNext}>
+              Avançar
+            </CButton>
+          )}
           {props.currentStep === props.totalSteps && (
-            <CButton onClick={handleFinish}>Efectuar Matrícula</CButton>
+            <CButton type="submit" onClick={handleFinish}>
+              Efectuar Matrícula
+            </CButton>
           )}
         </CCol>
       </CRow>
