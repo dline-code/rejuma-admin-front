@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useFetchEstudantes } from '../services/useFetchEstudantes'
 
 export function useFilterDataOfStudent() {
@@ -10,7 +10,6 @@ export function useFilterDataOfStudent() {
   const [studentData, setStudentData] = useState([])
 
   function FilterByClass(event) {
-    if (filterBy === null) return
     if (!filterBy.length) return
     const { value } = event.target
     if (!value.length) return
@@ -22,14 +21,8 @@ export function useFilterDataOfStudent() {
       setFilteredData(newData)
     }
   }
-  function handlefilterBy(event) {
-    const { value } = event.target
-    setFilterBy(value)
-    if (filterBy === null) setFilteredData(null)
-  }
 
   function FilterByTurno(event) {
-    if (filterBy === null) return
     if (!filterBy.length) return
     const { value } = event.target
     if (!value.length) return
@@ -57,7 +50,6 @@ export function useFilterDataOfStudent() {
     filterBy,
     setFilterBy,
     setFilteredData,
-    handlefilterBy,
     studentData,
     searching,
     searchByName,

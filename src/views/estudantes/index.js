@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useState } from 'react'
 import {
   CButton,
   CRow,
@@ -28,10 +28,8 @@ import Swal from 'sweetalert2'
 import { cilPlus as cilPlusIcon } from '@coreui/icons'
 import { EstudantesListItemActionsDropdown } from './components/ListItemActionsDropdown'
 import { SaveTreatmentForm } from './components/SaveEstudanteForm'
-// import { fetchTreatmentSalon } from './services/useFetchTreatmentSalon'
 import api from 'src/services/api'
 import { useHistory } from 'react-router-dom'
-import { useState } from 'react'
 import { useFetchEstudantes } from './services/useFetchEstudantes'
 import { useFilterDataOfStudent } from './hooks/useFilterDataOfStudent'
 
@@ -45,8 +43,8 @@ function Estudantes() {
     FilterByClass,
     FilterByTurno,
     filteredData,
-    handlefilterBy,
     searchByName,
+    setFilterBy,
     searching,
     studentData,
   } = useFilterDataOfStudent()
@@ -107,7 +105,11 @@ function Estudantes() {
               <CRow className="mb-3">
                 <CCol md="5">
                   <CFormLabel htmlFor="selectSm">Filtrar por</CFormLabel>
-                  <CFormSelect name="selectSm" id="SelectLm" onChange={handlefilterBy}>
+                  <CFormSelect
+                    name="selectSm"
+                    id="SelectLm"
+                    onChange={(event) => setFilterBy(event.target.value)}
+                  >
                     <option value="null">Please select</option>
                     {fields?.map((item, index) => (
                       <option key={index} value={item}>
@@ -123,7 +125,7 @@ function Estudantes() {
                       className="mt-2"
                       onChange={FilterByClass}
                     >
-                      <option value="null">Please select your classe</option>
+                      <option value="null">Por favor selecione a sua classe</option>
                       {fieldsClass?.map((item, index) => (
                         <option key={item.id} value={item.classe}>
                           {item.classe}
@@ -138,7 +140,7 @@ function Estudantes() {
                       className="mt-2"
                       onChange={FilterByTurno}
                     >
-                      <option value="null">Please select your classe</option>
+                      <option value="null">Por favor selecione o seu Turno</option>
                       {fieldsTurno?.map((item, index) => (
                         <option key={item.id} value={item.designacao}>
                           {item.designacao}
