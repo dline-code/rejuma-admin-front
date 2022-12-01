@@ -38,12 +38,12 @@ function Step3(props) {
           {applicant.n_BI}
         </p>
         <p>
-          <span>Emissão:</span>
-          {applicant.emissionDate}
+          <span>Natural:</span>
+          {applicant.natural}
         </p>
         <p>
-          <span>Expiração:</span>
-          {applicant.expirationDate}
+          <span>Nacionalidade:</span>
+          {applicant.nacionalidade}
         </p>
         <p>
           <span>Nome:</span>
@@ -52,10 +52,6 @@ function Step3(props) {
         <p>
           <span>Data Nascimento:</span>
           {applicant.dataNascimento}
-        </p>
-        <p>
-          <span>Género:</span>
-          {applicant.gender}
         </p>
         <p>
           <span>Nome do Pai:</span>
@@ -82,20 +78,8 @@ function Step3(props) {
           {classes.filter(({ id }) => id === applicant.turmaId)[0]?.nome}
         </p>
         <p>
-          <span>Encarregado:</span>
-          {applicant.sponsorEducation}
-        </p>
-        <p>
-          <span>Profissão:</span>
-          {applicant.profissao}
-        </p>
-        <p>
-          <span>morada:</span>
-          {applicant.morada}
-        </p>
-        <p>
-          <span>telephone:</span>
-          {applicant.telephone}
+          <span>Está a se Matricular:</span>
+          {usersKind.filter(({ id }) => id === applicant.tipoUsuarioId)[0]?.designacao}
         </p>
       </div>
       <br />

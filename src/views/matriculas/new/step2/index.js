@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { CForm, CFormInput, CFormLabel, CRow, CCol, CFormSelect } from '@coreui/react'
+import { CForm, CFormLabel, CRow, CCol, CFormSelect } from '@coreui/react'
 
 import ActionButtons from '../actionsButtons'
 import { useForm } from 'react-hook-form'
@@ -66,7 +66,7 @@ function Step2(props) {
                 </option>
               ))}
             </CFormSelect>
-            <span style={{ color: 'red' }}>{errors.classe?.message}</span>
+            <span style={{ color: 'red' }}>{errors.classeId?.message}</span>
           </CCol>
           {showCurso && (
             <CCol>
@@ -80,7 +80,7 @@ function Step2(props) {
                 <option value="3">Pedagogia</option>
                 <option value="3">Gestão</option>
               </CFormSelect>
-              <span style={{ color: 'red' }}>{errors.curso?.message}</span>
+              <span style={{ color: 'red' }}>{errors.cursoId?.message}</span>
             </CCol>
           )}
           <CCol>
@@ -95,7 +95,7 @@ function Step2(props) {
                 </option>
               ))}
             </CFormSelect>
-            <span style={{ color: 'red' }}>{errors.turno?.message}</span>
+            <span style={{ color: 'red' }}>{errors.turnoId?.message}</span>
           </CCol>
         </CRow>
         <CRow>
@@ -111,38 +111,21 @@ function Step2(props) {
                 </option>
               ))}
             </CFormSelect>
-            <span style={{ color: 'red' }}>{errors.turno?.message}</span>
+            <span style={{ color: 'red' }}>{errors.turmaId?.message}</span>
           </CCol>
           <CCol>
-            <CFormLabel style={{ marginTop: '15px' }}> Nome do Encarregado de Educação </CFormLabel>
-            <CFormInput
-              {...register('sponsorEducation', { required: 'Informe o nome do resposavél' })}
-            />
-            <span style={{ color: 'red' }}>{errors.sponsorEducation?.message}</span>
-          </CCol>
-          <CCol>
-            <CFormLabel style={{ marginTop: '15px' }}> Residência </CFormLabel>
-            <CFormInput {...register('morada', { required: 'Digite a sua morada' })} />
-            <span style={{ color: 'red' }}>{errors.morada?.message}</span>
-          </CCol>
-        </CRow>
-        <CRow>
-          <CCol>
-            <CFormLabel style={{ marginTop: '15px' }}> Profissão </CFormLabel>
-            <CFormInput {...register('profissao', { required: 'Escreva um emcargo' })} />
-            <span style={{ color: 'red' }}>{errors.profissao?.message}</span>
-          </CCol>
-
-          <CCol>
-            <CFormLabel style={{ marginTop: '15px' }}> Contacto </CFormLabel>
-            <CFormInput
-              type="tel"
-              {...register('telephone', {
-                required: 'Informe o seu contacto',
-                maxLength: { value: 9, message: 'Numero de telefone inválido' },
-              })}
-            />
-            <span style={{ color: 'red' }}>{errors.telephone?.message}</span>
+            <CFormLabel style={{ marginTop: '15px' }}> A Matricular </CFormLabel>
+            <CFormSelect
+              aria-label="Default select example"
+              {...register('tipoUsuarioId', { required: 'Selecione a pessoa a ser matriculada' })}
+            >
+              {usersKind.map((userkind) => (
+                <option key={userkind.id} value={userkind.id}>
+                  {userkind.designacao}
+                </option>
+              ))}
+            </CFormSelect>
+            <span style={{ color: 'red' }}>{errors.tipoUsuarioId?.message}</span>
           </CCol>
         </CRow>
         <br />

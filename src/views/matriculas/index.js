@@ -28,7 +28,6 @@ import { cilPeople } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import { cilPlus as cilPlusIcon } from '@coreui/icons'
 import SaveAppointmentForm from './new/index'
-import { AppointmentProvider } from 'src/contexts/AppointmentContext'
 import api from 'src/services/api'
 import { useQuery } from 'react-query'
 
@@ -80,12 +79,10 @@ function Appointment() {
           <CModalTitle>Matrícula</CModalTitle>
         </CModalHeader>
         <CModalBody>
-          <AppointmentProvider>
-            <SaveAppointmentForm
-              setIsModalOpen={setIsModalOpen}
-              onFormData={(data) => setMatriculas([...matriculas, data])}
-            />
-          </AppointmentProvider>
+          <SaveAppointmentForm
+            setIsModalOpen={setIsModalOpen}
+            onFormData={(data) => setMatriculas([...matriculas, data])}
+          />
         </CModalBody>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setIsModalOpen(false)}>
@@ -147,13 +144,6 @@ function Appointment() {
                 <CIcon style={{ marginLeft: '10px' }} icon={cilPlusIcon} className="me-2" />
               </CButton>
             </div>
-            {/* <div className="mb-40">
-              <div className="mb-3" width="100px">
-                <CFormLabel htmlFor="exampleFormControlInput1">Pesquise por algo</CFormLabel>
-                //filtrar aqui por pesquisa *
-                <CFormInput type="search" id="exampleFormControlInput1" />
-              </div>
-            </div> */}
             <CTable align="middle" className="mb-0 border" hover responsive>
               <CTableHead color="light">
                 <CTableRow>

@@ -9,7 +9,7 @@ import Step1 from './step1'
 import Step2 from './step2'
 import Step3 from './step3'
 import { useRecordsContext } from 'src/contexts/RecordsContext'
-import api from 'src/services/api'
+import { setenrollment } from 'src/services/methods'
 
 function NewMatricula({ setIsModalOpen, onFormData = { function() {} } }) {
   const [_, setStepWizard] = useState(null)
@@ -38,12 +38,12 @@ function NewMatricula({ setIsModalOpen, onFormData = { function() {} } }) {
     }).then(async (result) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
-        const response = await api.post(`/matricula/post`, {
+        const data = await setenrollment({
           ...applicant,
           tipoUsuarioId: 'beb7ad3d-3edf-4078-9f7b-0f098dab3679',
           cursoId: 'a59a5af8-2ed8-4fad-b6e5-df5b998375e9',
         })
-        console.log(response.data)
+        console.log(data)
         Swal.fire('Salvo!', '', 'success')
         setIsModalOpen(false)
       } else if (result.isDenied) {

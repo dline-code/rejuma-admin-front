@@ -1,5 +1,5 @@
 import React from 'react'
-import { CForm, CFormInput, CFormLabel, CCol, CRow, CFormSelect } from '@coreui/react'
+import { CForm, CFormInput, CFormLabel, CCol, CRow } from '@coreui/react'
 import ActionButtons from '../actionsButtons'
 import { useForm } from 'react-hook-form'
 import { useRecordsContext } from 'src/contexts/RecordsContext'
@@ -17,8 +17,7 @@ function Step1(props) {
   }
 
   const handleIncrementApplicantInfo = (data) => {
-    setApplicant({ ...data, ['file']: data.file[0] })
-    console.log({ ...data, ['file']: data.file[0] })
+    setApplicant(data)
   }
 
   return (
@@ -29,7 +28,6 @@ function Step1(props) {
           <CCol>
             <CFormLabel>Número do BI</CFormLabel>
             <CFormInput
-              // onBlur={fillField}
               {...register('n_BI', {
                 required: 'O Nº BI é necessário',
                 pattern: {
@@ -41,21 +39,20 @@ function Step1(props) {
             <span style={{ color: 'red' }}>{errors.biNumber?.message}</span>
           </CCol>
           <CCol>
-            <CFormLabel> Data de Emissão </CFormLabel>
+            <CFormLabel> Natural </CFormLabel>
             <CFormInput
-              type="date"
-              {...register('emissionDate', {
-                required: 'a Data de emissão é necessário',
+              placeholder="Provícia-Município"
+              {...register('natural', {
+                required: 'O local de nascimento é necessário',
               })}
             />
             <span style={{ color: 'red' }}>{errors.emissionDate?.message}</span>
           </CCol>
           <CCol>
-            <CFormLabel> Data de Expiração </CFormLabel>
+            <CFormLabel> Nacionalidade </CFormLabel>
             <CFormInput
-              type="date"
-              {...register('expirationDate', {
-                required: 'a Data de Expiração é necessário',
+              {...register('nacionalidade', {
+                required: 'Informe a sua nacionalidade',
               })}
             />
             <span style={{ color: 'red' }}>{errors.expirationDate?.message}</span>
@@ -97,19 +94,6 @@ function Step1(props) {
         <br />
         <CRow>
           <CCol>
-            <CFormLabel> Género </CFormLabel>
-            <CFormSelect
-              aria-label="Default select example"
-              {...register('gender', {
-                required: 'Selecione é necessário',
-              })}
-            >
-              <option value="Masculino">Masculino</option>
-              <option value="Feminino">Feminino</option>
-            </CFormSelect>
-            <span style={{ color: 'red' }}>{errors.gender?.message}</span>
-          </CCol>
-          <CCol>
             <CFormLabel> Nome do Pai </CFormLabel>
             <CFormInput
               {...register('nome_do_pai', {
@@ -127,22 +111,6 @@ function Step1(props) {
               })}
             />
             <span style={{ color: 'red' }}>{errors.motherName?.message}</span>
-          </CCol>
-        </CRow>
-        <CRow>
-          <CCol>
-            <CFormLabel style={{ marginTop: '15px' }}> Documentos </CFormLabel>
-            <CFormInput
-              type="file"
-              style={{ width: '285px' }}
-              {...register('file', {
-                pattern: {
-                  value: /^[a-z0-9_()\-\[\]]+\.pdf$/i,
-                  message: 'O aquivo tem que ser em pdf',
-                },
-              })}
-            />
-            <span style={{ color: 'red' }}>{errors.file?.message}</span>
           </CCol>
         </CRow>
         <br />
