@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react'
+import { useQuery } from 'react-query'
+import React from 'react'
 import {
   CButton,
   CRow,
@@ -27,43 +28,45 @@ import Swal from 'sweetalert2'
 import { cilPlus as cilPlusIcon } from '@coreui/icons'
 import { TreatmentListItemActionsDropdown } from './components/ListItemActionsDropdown'
 import { useState } from 'react'
-import { SaveTreatmentForm } from './components/SaveTreatmentForm'
-// import { fetchTreatmentSalon } from './services/useFetchTreatmentSalon'
-import api from 'src/services/api'
 import { useHistory } from 'react-router-dom'
+import { CreateCourseForm } from './components/CreateCourseForm'
+import { deleteCourse, getCourses } from 'src/services/courseQueryMethods'
+import { EditCourseForm } from './components/EditCourseForm'
 
 function Appointment() {
-  const [treatmentSalon, setTreatmentSalon] = useState([])
-  const [filteredData, setFilteredData] = useState(treatmentSalon)
-  const [filterBy, setFilterBy] = useState('')
+  const { data } = useQuery('CoursesData', async () => {
+    const courses = await getCourses()
+    setCoursesData(courses.data)
+
+    return courses.data
+  })
+
+  const [coursesData, setCoursesData] = useState([])
+  const [currentCourse, setCurrentCourse] = useState({})
+  const [isCourseEdit, setisCourseEdit] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState()
   const history = useHistory()
 
-  const searchBy = (event) => {
-    const { value } = event.target
-    const newData = filteredData?.filter(
-      (item) => String(item[filterBy]).toLocaleLowerCase().indexOf(value.toLocaleLowerCase()) > -1,
-    )
-    setFilteredData(newData)
+  const handleFilterDataBy = (event) => {
+    event.preventDefault()
+
+    const searchKind = event.target.elements.searchKind.value
+    const searched = event.target.elements.searched.value.toLowerCase()
+
+    if (searchKind === 'name') {
+      setCoursesData(data.filter(({ nome }) => nome.toLowerCase().includes(searched)))
+    } else if (searchKind === 'description') {
+      setCoursesData(data.filter(({ descricao }) => descricao.toLowerCase().includes(searched)))
+    }
   }
 
-  useEffect(() => {
-    const dataFunc = [
-      {
-        id: 1,
-        nome: 'Informática de Gestão',
-        cargo: 'Lorem ipsum sit dolor amet',
-      },
-    ]
-    setTreatmentSalon(dataFunc)
-  }, [])
-
-  const handleEdit = () => {
-    console.log('delete')
+  const handleEdit = (courseData) => {
+    setCurrentCourse(courseData)
+    setisCourseEdit(true)
     setIsModalOpen(true)
   }
 
-  const handleRemove = (treatmentSalonId) => {
+  const handleRemove = (courseId) => {
     Swal.fire({
       title: 'Tem a certeza que pretende eliminar?',
       text: 'Você não será capaz de reverter isso!',
@@ -75,7 +78,7 @@ function Appointment() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await api.delete(`/treatmentsalon/${treatmentSalonId}`)
+          await deleteCourse(courseId)
           Swal.fire('Sucesso', 'Removido com sucesso', 'success')
         } catch (error) {
           console.log(error?.response?.data)
@@ -86,11 +89,10 @@ function Appointment() {
     })
   }
 
-  const handleClickNewAppointment = () => {
+  const handleOpenCreateCurseModal = () => {
+    setisCourseEdit(false)
     setIsModalOpen((currentValue) => !currentValue)
   }
-
-  const fields = ['curso', 'description']
 
   return (
     <>
@@ -99,7 +101,7 @@ function Appointment() {
           <CModalTitle>Inserir Curso </CModalTitle>
         </CModalHeader>
         <CModalBody>
-          <SaveTreatmentForm />
+          {isCourseEdit ? <EditCourseForm courseData={currentCourse} /> : <CreateCourseForm />}
         </CModalBody>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setIsModalOpen(false)}>
@@ -112,41 +114,36 @@ function Appointment() {
         <CCard>
           <CCardHeader>Dados de Pesquisa</CCardHeader>
           <CCardBody>
-            <CForm>
+            <CForm onSubmit={handleFilterDataBy}>
               <CRow className="mb-3">
-                <CCol md="5">
-                  <CFormLabel htmlFor="selectSm">Filtrar por</CFormLabel>
-                  <CFormSelect name="selectSm" id="SelectLm" onChange={(e) => console.log(e)}>
-                    <option value="null">Please select</option>
-                    {fields?.map((item, index) => (
-                      <option key={index} value={item}>
-                        {item}
-                      </option>
-                    ))}
-                    /
+                <CCol md="3">
+                  <CFormLabel htmlFor="searchKind">Filtrar por</CFormLabel>
+                  <CFormSelect name="searchKind" id="searchKind">
+                    <option disabled>Selecione um Campo</option>
+                    <option value="name">Nome</option>
+                    <option value="description">Descrição</option>
                   </CFormSelect>
                 </CCol>
                 <CCol md="7">
-                  <CFormLabel htmlFor="pesq" onChange={(event) => setFilterBy(event.target.value)}>
-                    Pesquisar
-                  </CFormLabel>
-                  <CForm inline>
-                    <CFormInput
-                      className="mr-sm-2"
-                      placeholder="Search"
-                      id="pesq"
-                      style={{ width: '80%' }}
-                      onChange={searchBy}
-                    />
-                    {/* <CButton color="outline-info" className="my-2 my-sm-0" type="submit">
-                      Search
-                    </CButton> */}
-                  </CForm>
+                  <CFormLabel htmlFor="searched">Pesquisar</CFormLabel>
+                  <CFormInput
+                    name="searched"
+                    className="mr-sm-2"
+                    placeholder="Informe o que se quer pesquisar"
+                    id="searched"
+                    style={{ width: '80%' }}
+                  />
+                </CCol>
+                <CCol style={{ marginTop: '30px' }}>
+                  <CButton color="outline-info" className="my-2 my-sm-0" type="submit">
+                    Search
+                  </CButton>
                 </CCol>
               </CRow>
             </CForm>
           </CCardBody>
         </CCard>
+
         <br />
         <CCard>
           <CCardBody>
@@ -160,17 +157,12 @@ function Appointment() {
             >
               <h4>Cursos</h4>
 
-              <CButton onClick={handleClickNewAppointment} size="sm" color="primary">
+              <CButton onClick={handleOpenCreateCurseModal} size="sm" color="primary">
                 Novo
                 <CIcon style={{ marginLeft: '10px' }} icon={cilPlusIcon} className="me-2" />
               </CButton>
             </div>
-            <div className="mb-40">
-              <div className="mb-3" width="100px">
-                <CFormLabel htmlFor="exampleFormControlInput1">Pesquise por algo</CFormLabel>
-                <CFormInput type="search" id="exampleFormControlInput1" />
-              </div>
-            </div>
+
             <CTable>
               <CTableHead>
                 <CTableRow>
@@ -181,15 +173,15 @@ function Appointment() {
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {treatmentSalon?.map(({ id, nome, cargo }, idx) => (
-                  <CTableRow key={id}>
+                {coursesData?.map((courseData, idx) => (
+                  <CTableRow key={courseData.id}>
                     <CTableHeaderCell scope="row">{idx + 1}</CTableHeaderCell>
-                    <CTableDataCell>{nome}</CTableDataCell>
-                    <CTableDataCell>{cargo}</CTableDataCell>
+                    <CTableDataCell>{courseData.nome}</CTableDataCell>
+                    <CTableDataCell>{courseData.descricao}</CTableDataCell>
                     <CTableDataCell>
                       <TreatmentListItemActionsDropdown
-                        onEdit={handleEdit}
-                        onRemove={() => handleRemove(id)}
+                        onEdit={() => handleEdit(courseData)}
+                        onRemove={() => handleRemove(courseData.id)}
                       />
                     </CTableDataCell>
                   </CTableRow>

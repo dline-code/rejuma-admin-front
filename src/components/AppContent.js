@@ -8,7 +8,7 @@ import { AuthContext } from 'src/contexts/AuthContext'
 
 function CustomRoute({ isPrivate = true, ...rest }) {
   const { authenticated } = useContext(AuthContext)
-  if (isPrivate && !authenticated) {
+  if (isPrivate && authenticated) {
     return <Redirect to={'/login'} />
   }
   return <Route {...rest} />
