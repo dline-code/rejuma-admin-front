@@ -1,7 +1,8 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: 'https://rejuma.herokuapp.com',
+  // baseURL: 'https://rejuma.herokuapp.com',
+  baseURL: 'http://localhost:8888',
 })
 
 api.interceptors.request.use((config) => {

@@ -33,8 +33,8 @@ import api from 'src/services/api'
 import { useHistory } from 'react-router-dom'
 
 function Funcionarios() {
-  const [treatmentSalon, setTreatmentSalon] = useState([])
-  const [filteredData, setFilteredData] = useState(treatmentSalon)
+  const [filteredData, setFilteredData] = useState()
+  const [employeeDatas, setEmployeeDatas] = useState([])
   const [filterBy, setFilterBy] = useState('')
   const [isModalOpen, setIsModalOpen] = useState()
   const history = useHistory()
@@ -46,17 +46,6 @@ function Funcionarios() {
     )
     setFilteredData(newData)
   }
-
-  useEffect(() => {
-    const dataFunc = [
-      {
-        id: 1,
-        nome: 'Robson Manuel',
-        cargo: 'Dono',
-      },
-    ]
-    setTreatmentSalon(dataFunc)
-  }, [])
 
   const handleEdit = () => {
     console.log('delete')
@@ -72,17 +61,19 @@ function Funcionarios() {
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Confirmar',
-    }).then(async (result) => {
+    }).then((result) => {
       if (result.isConfirmed) {
         try {
-          await api.delete(`/treatmentsalon/${treatmentSalonId}`)
+          const data = employeeDatas
+          data.splice(data.indexOf(treatmentSalonId))
+          setEmployeeDatas([...data])
           Swal.fire('Sucesso', 'Removido com sucesso', 'success')
         } catch (error) {
           console.log(error?.response?.data)
           Swal.fire('Erro', `${error?.resonse?.data?.error}`, 'error')
         }
-        history.go(0)
       }
+      history.push('/treatment')
     })
   }
 
@@ -99,7 +90,7 @@ function Funcionarios() {
           <CModalTitle>Inserir Funcionário </CModalTitle>
         </CModalHeader>
         <CModalBody>
-          <SaveTreatmentForm />
+          <SaveTreatmentForm employeeDatas={employeeDatas} setEmployeeDatas={setEmployeeDatas} />
         </CModalBody>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setIsModalOpen(false)}>
@@ -181,11 +172,11 @@ function Funcionarios() {
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {treatmentSalon?.map(({ id, nome, cargo }, idx) => (
+                {employeeDatas?.map(({ id, nome, designacao }, idx) => (
                   <CTableRow key={id}>
                     <CTableHeaderCell scope="row">{idx + 1}</CTableHeaderCell>
                     <CTableDataCell>{nome}</CTableDataCell>
-                    <CTableDataCell>{cargo}</CTableDataCell>
+                    <CTableDataCell>{designacao}</CTableDataCell>
                     <CTableDataCell>
                       <FuncionariosListItemActionsDropdown
                         onEdit={handleEdit}

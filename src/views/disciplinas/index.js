@@ -28,7 +28,6 @@ import { cilPlus as cilPlusIcon } from '@coreui/icons'
 import { TreatmentListItemActionsDropdown } from './components/ListItemActionsDropdown'
 import { useState } from 'react'
 import { SaveTreatmentForm } from './components/SaveTreatmentForm'
-// import { fetchTreatmentSalon } from './services/useFetchTreatmentSalon'
 import api from 'src/services/api'
 import { useHistory } from 'react-router-dom'
 
