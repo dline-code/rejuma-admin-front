@@ -23,7 +23,6 @@ import {
   CTableRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import Swal from 'sweetalert2'
 import { cilPlus as cilPlusIcon } from '@coreui/icons'
 import { TreatmentListItemActionsDropdown } from './components/ListItemActionsDropdown'
 import { useState } from 'react'
@@ -31,66 +30,25 @@ import { SaveTreatmentForm } from './components/SaveTreatmentForm'
 // import { fetchTreatmentSalon } from './services/useFetchTreatmentSalon'
 import api from 'src/services/api'
 import { useHistory } from 'react-router-dom'
+import { useSubject } from './hooks/useSubject'
+import { useFilterSubject } from './hooks/useFilterSubject'
 
 function Appointment() {
-  const [treatmentSalon, setTreatmentSalon] = useState([])
-  const [filteredData, setFilteredData] = useState(treatmentSalon)
-  const [filterBy, setFilterBy] = useState('')
   const [isModalOpen, setIsModalOpen] = useState()
-  const history = useHistory()
-
-  const searchBy = (event) => {
-    const { value } = event.target
-    const newData = filteredData?.filter(
-      (item) => String(item[filterBy]).toLocaleLowerCase().indexOf(value.toLocaleLowerCase()) > -1,
-    )
-    setFilteredData(newData)
-  }
+  const { handleDatas, subjectData, handleDeleteSubject } = useSubject()
+  const { fields, searching, filteredData, searchBySubject, handlefilterBy } = useFilterSubject()
 
   useEffect(() => {
-    const dataFunc = [
-      {
-        id: 1,
-        nome: 'Matemática',
-        cargo: 'Lorem ipsum sit dolor amet',
-      },
-    ]
-    setTreatmentSalon(dataFunc)
+    handleDatas()
   }, [])
 
   const handleEdit = () => {
     console.log('delete')
     setIsModalOpen(true)
   }
-
-  const handleRemove = (treatmentSalonId) => {
-    Swal.fire({
-      title: 'Tem a certeza que pretende eliminar?',
-      text: 'Você não será capaz de reverter isso!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Confirmar',
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          await api.delete(`/treatmentsalon/${treatmentSalonId}`)
-          Swal.fire('Sucesso', 'Removido com sucesso', 'success')
-        } catch (error) {
-          console.log(error?.response?.data)
-          Swal.fire('Erro', `${error?.resonse?.data?.error}`, 'error')
-        }
-        history.go(0)
-      }
-    })
-  }
-
   const handleClickNewAppointment = () => {
     setIsModalOpen((currentValue) => !currentValue)
   }
-
-  const fields = ['disciplina', 'description']
 
   return (
     <>
@@ -116,7 +74,7 @@ function Appointment() {
               <CRow className="mb-3">
                 <CCol md="5">
                   <CFormLabel htmlFor="selectSm">Filtrar por</CFormLabel>
-                  <CFormSelect name="selectSm" id="SelectLm" onChange={(e) => console.log(e)}>
+                  <CFormSelect name="selectSm" id="SelectLm" onChange={handlefilterBy}>
                     <option value="null">Please select</option>
                     {fields?.map((item, index) => (
                       <option key={index} value={item}>
@@ -127,16 +85,14 @@ function Appointment() {
                   </CFormSelect>
                 </CCol>
                 <CCol md="7">
-                  <CFormLabel htmlFor="pesq" onChange={(event) => setFilterBy(event.target.value)}>
-                    Pesquisar
-                  </CFormLabel>
+                  <CFormLabel htmlFor="pesq">Pesquisar</CFormLabel>
                   <CForm inline>
                     <CFormInput
                       className="mr-sm-2"
                       placeholder="Search"
                       id="pesq"
                       style={{ width: '80%' }}
-                      onChange={searchBy}
+                      onChange={searchBySubject}
                     />
                     {/* <CButton color="outline-info" className="my-2 my-sm-0" type="submit">
                       Search
@@ -181,19 +137,33 @@ function Appointment() {
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {treatmentSalon?.map(({ id, nome, cargo }, idx) => (
-                  <CTableRow key={id}>
-                    <CTableHeaderCell scope="row">{idx + 1}</CTableHeaderCell>
-                    <CTableDataCell>{nome}</CTableDataCell>
-                    <CTableDataCell>{cargo}</CTableDataCell>
-                    <CTableDataCell>
-                      <TreatmentListItemActionsDropdown
-                        onEdit={handleEdit}
-                        onRemove={() => handleRemove(id)}
-                      />
-                    </CTableDataCell>
-                  </CTableRow>
-                ))}
+                {!searching
+                  ? subjectData?.map(({ id, nome }, idx) => (
+                      <CTableRow key={id}>
+                        <CTableHeaderCell scope="row">{idx + 1}</CTableHeaderCell>
+                        <CTableDataCell>{nome}</CTableDataCell>
+                        <CTableDataCell>{null}</CTableDataCell>
+                        <CTableDataCell>
+                          <TreatmentListItemActionsDropdown
+                            onEdit={handleEdit}
+                            onRemove={() => handleDeleteSubject(id)}
+                          />
+                        </CTableDataCell>
+                      </CTableRow>
+                    ))
+                  : filteredData?.map(({ id, nome }, idx) => (
+                      <CTableRow key={id}>
+                        <CTableHeaderCell scope="row">{idx + 1}</CTableHeaderCell>
+                        <CTableDataCell>{nome}</CTableDataCell>
+                        <CTableDataCell>{null}</CTableDataCell>
+                        <CTableDataCell>
+                          <TreatmentListItemActionsDropdown
+                            onEdit={handleEdit}
+                            onRemove={() => handleDeleteSubject(id)}
+                          />
+                        </CTableDataCell>
+                      </CTableRow>
+                    ))}
               </CTableBody>
             </CTable>
           </CCardBody>

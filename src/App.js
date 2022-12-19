@@ -4,6 +4,7 @@ import './scss/style.scss'
 
 import { QueryClientProvider, QueryClient } from 'react-query'
 import { AuthProvider } from './contexts/AuthContext'
+import { SubjectContextProvider } from './views/disciplinas/hooks/useSubject'
 
 const queryClient = new QueryClient()
 
@@ -27,37 +28,39 @@ class App extends Component {
     return (
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <HashRouter>
-            <React.Suspense fallback={loading}>
-              <Switch>
-                <Route
-                  exact
-                  path="/login"
-                  name="Login Page"
-                  render={(props) => <Login {...props} />}
-                />
-                <Route
-                  exact
-                  path="/register"
-                  name="Register Page"
-                  render={(props) => <Register {...props} />}
-                />
-                <Route
-                  exact
-                  path="/404"
-                  name="Page 404"
-                  render={(props) => <Page404 {...props} />}
-                />
-                <Route
-                  exact
-                  path="/500"
-                  name="Page 500"
-                  render={(props) => <Page500 {...props} />}
-                />
-                <Route path="/" name="Home" render={(props) => <DefaultLayout {...props} />} />
-              </Switch>
-            </React.Suspense>
-          </HashRouter>
+          <SubjectContextProvider>
+            <HashRouter>
+              <React.Suspense fallback={loading}>
+                <Switch>
+                  <Route
+                    exact
+                    path="/login"
+                    name="Login Page"
+                    render={(props) => <Login {...props} />}
+                  />
+                  <Route
+                    exact
+                    path="/register"
+                    name="Register Page"
+                    render={(props) => <Register {...props} />}
+                  />
+                  <Route
+                    exact
+                    path="/404"
+                    name="Page 404"
+                    render={(props) => <Page404 {...props} />}
+                  />
+                  <Route
+                    exact
+                    path="/500"
+                    name="Page 500"
+                    render={(props) => <Page500 {...props} />}
+                  />
+                  <Route path="/" name="Home" render={(props) => <DefaultLayout {...props} />} />
+                </Switch>
+              </React.Suspense>
+            </HashRouter>
+          </SubjectContextProvider>
         </AuthProvider>
       </QueryClientProvider>
     )
