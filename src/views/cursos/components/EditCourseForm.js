@@ -16,6 +16,7 @@ import { getCategoriesCourses, updateCourse } from 'src/services/courseQueryMeth
 
 export const EditCourseForm = ({ courseData }) => {
   const [categories, setCategories] = useState([])
+  const [newCourseData, setNewCourseData] = useState(courseData)
   const [loading, setLoading] = useState(false)
   const history = useHistory()
 
@@ -33,8 +34,9 @@ export const EditCourseForm = ({ courseData }) => {
     formState: { errors },
   } = useForm()
 
-  const handleChangeCourseData = async ({ data }) => {
+  const handleChangeCourseData = async (data) => {
     setLoading(true)
+    console.log(data)
     try {
       const response = await updateCourse(data.id, data)
       console.log(response)
@@ -60,7 +62,8 @@ export const EditCourseForm = ({ courseData }) => {
           {...register('nome', {
             required: 'O Nome do Curso é necessário',
           })}
-          value={courseData.nome}
+          value={newCourseData.nome}
+          onChange={(e) => setNewCourseData(e.target.value)}
         />
         <span style={{ color: 'red' }}>{errors.nome?.message}</span>
       </CRow>
@@ -73,7 +76,8 @@ export const EditCourseForm = ({ courseData }) => {
           {...register('descricao', {
             required: 'A descrição é necessário',
           })}
-          value={courseData.descricao}
+          value={newCourseData.descricao}
+          onChange={(e) => setNewCourseData(e.target.value)}
         />
         <span style={{ color: 'red' }}>{errors.descricao?.message}</span>
       </CRow>
