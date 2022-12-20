@@ -31,6 +31,7 @@ import { useState } from 'react'
 import { CreateShiftsForm } from './components/CreateShiftsForm'
 import { useHistory } from 'react-router-dom'
 import { deleteShift, getShifts } from 'src/services/shiftsQueryMethods'
+import { EditShiftsForm } from './components/EditShiftsForm'
 
 function Appointment() {
   const { data } = useQuery('ShiftsData', async () => {
@@ -57,8 +58,8 @@ function Appointment() {
     }
   }
 
-  const handleEdit = () => {
-    setCurrentShift(shifts)
+  const handleEdit = (shift) => {
+    setCurrentShift(shift)
     setisShiftEdit(true)
     setIsModalOpen(true)
   }
@@ -95,10 +96,10 @@ function Appointment() {
     <>
       <CModal visible={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <CModalHeader>
-          <CModalTitle>Inserir Curso </CModalTitle>
+          <CModalTitle>Turno </CModalTitle>
         </CModalHeader>
         <CModalBody>
-          <CreateShiftsForm />
+          {isShiftEdit ? <EditShiftsForm shiftData={currentShift} /> : <CreateShiftsForm />}
         </CModalBody>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setIsModalOpen(false)}>
@@ -172,14 +173,14 @@ function Appointment() {
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {shifts?.map(({ id, designacao }, idx) => (
-                  <CTableRow key={id}>
+                {shifts?.map((shift, idx) => (
+                  <CTableRow key={shift.id}>
                     <CTableHeaderCell scope="row">{idx + 1}</CTableHeaderCell>
-                    <CTableDataCell>{designacao}</CTableDataCell>
+                    <CTableDataCell>{shift.designacao}</CTableDataCell>
                     <CTableDataCell>
                       <TreatmentListItemActionsDropdown
-                        onEdit={handleEdit}
-                        onRemove={() => handleRemove(id)}
+                        onEdit={() => handleEdit(shift)}
+                        onRemove={() => handleRemove(shift.id)}
                       />
                     </CTableDataCell>
                   </CTableRow>
