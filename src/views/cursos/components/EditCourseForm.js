@@ -21,11 +21,10 @@ export const EditCourseForm = ({ courseData }) => {
   const history = useHistory()
 
   useEffect(() => {
-    async function fetchData() {
+    ;(async () => {
       const categories = await getCategoriesCourses()
       setCategories(categories)
-    }
-    fetchData()
+    })()
   }, [])
 
   const {
@@ -36,14 +35,11 @@ export const EditCourseForm = ({ courseData }) => {
 
   const handleChangeCourseData = async (data) => {
     setLoading(true)
-    console.log(data)
     try {
-      const response = await updateCourse(data.id, data)
-      console.log(response)
+      await updateCourse(data.id, data)
       Swal.fire('Sucesso!', `Insreido com sucesso`, 'success')
       setLoading(false)
     } catch (error) {
-      console.log(error.response)
       Swal.fire('Erro!', `${error?.response?.data.error}`, 'error')
       setLoading(false)
     }
@@ -99,8 +95,8 @@ export const EditCourseForm = ({ courseData }) => {
         <span style={{ color: 'red' }}>{errors.categoriaCursoId?.message}</span>
       </CRow>
 
-      <CButton type="submit" disabled={loading || false}>
-        {loading && <CSpinner component="span" size="sm" variant="grow" aria-hidden="true" />}
+      <CButton type="submit" disabled={loading}>
+        {loading ? <CSpinner component="span" size="sm" variant="grow" aria-hidden="true" /> : null}
         Alterar
       </CButton>
     </CForm>

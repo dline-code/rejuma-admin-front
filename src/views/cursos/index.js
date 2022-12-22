@@ -10,7 +10,6 @@ import {
   CForm,
   CFormInput,
   CFormLabel,
-  CFormSelect,
   CModal,
   CModalBody,
   CModalFooter,
@@ -32,6 +31,7 @@ import { useHistory } from 'react-router-dom'
 import { CreateCourseForm } from './components/CreateCourseForm'
 import { deleteCourse, getCourses } from 'src/services/courseQueryMethods'
 import { EditCourseForm } from './components/EditCourseForm'
+import FilterSelect from './components/FilterSelect'
 
 function Appointment() {
   const { data } = useQuery('CoursesData', async () => {
@@ -47,17 +47,22 @@ function Appointment() {
   const [isModalOpen, setIsModalOpen] = useState()
   const history = useHistory()
 
-  const handleFilterDataBy = (event) => {
+  const handleFilterData = (event) => {
     event.preventDefault()
+    const newCoursesData = []
 
-    const searchKind = event.target.elements.searchKind.value
+    const searchType = event.target.elements.searchType.value
     const searched = event.target.elements.searched.value.toLowerCase()
 
-    if (searchKind === 'name') {
-      setCoursesData(data.filter(({ nome }) => nome.toLowerCase().includes(searched)))
-    } else if (searchKind === 'description') {
-      setCoursesData(data.filter(({ descricao }) => descricao.toLowerCase().includes(searched)))
-    }
+    data.forEach((courseData) => {
+      for (const key in courseData) {
+        if (key === searchType && courseData[key].toLowerCase().includes(searched)) {
+          newCoursesData.push(courseData)
+        }
+      }
+    })
+
+    setCoursesData(newCoursesData)
   }
 
   const handleEdit = (courseData) => {
@@ -94,6 +99,11 @@ function Appointment() {
     setIsModalOpen((currentValue) => !currentValue)
   }
 
+  const selectFilds = [
+    { value: 'nome', desc: 'Nome' },
+    { value: 'descricao', desc: 'Descrição' },
+  ]
+
   return (
     <>
       <CModal visible={isModalOpen} onClose={() => setIsModalOpen(false)}>
@@ -114,15 +124,10 @@ function Appointment() {
         <CCard>
           <CCardHeader>Dados de Pesquisa</CCardHeader>
           <CCardBody>
-            <CForm onSubmit={handleFilterDataBy}>
+            <CForm onSubmit={handleFilterData}>
               <CRow className="mb-3">
                 <CCol md="3">
-                  <CFormLabel htmlFor="searchKind">Filtrar por</CFormLabel>
-                  <CFormSelect name="searchKind" id="searchKind">
-                    <option disabled>Selecione um Campo</option>
-                    <option value="name">Nome</option>
-                    <option value="description">Descrição</option>
-                  </CFormSelect>
+                  <FilterSelect fields={selectFilds} />
                 </CCol>
                 <CCol md="7">
                   <CFormLabel htmlFor="searched">Pesquisar</CFormLabel>

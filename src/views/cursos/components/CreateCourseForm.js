@@ -26,23 +26,19 @@ export const CreateCourseForm = () => {
   const history = useHistory()
 
   useEffect(() => {
-    async function fetchData() {
+    ;(async () => {
       const categories = await getCategoriesCourses()
       setCategories(categories)
-    }
-
-    fetchData()
+    })()
   }, [])
 
   const handleAddNewCourse = async (data) => {
     setLoading(true)
     try {
-      const response = await setNewCourse(data)
-      console.log(response)
+      await setNewCourse(data)
       Swal.fire('Sucesso!', `Insreido com sucesso`, 'success')
       setLoading(false)
     } catch (error) {
-      console.log(error.response)
       Swal.fire('Erro!', `${error?.response?.data.error}`, 'error')
       setLoading(false)
     }
@@ -91,8 +87,8 @@ export const CreateCourseForm = () => {
         <span style={{ color: 'red' }}>{errors.categoriaCursoId?.message}</span>
       </CRow>
 
-      <CButton type="submit" disabled={loading || false}>
-        {loading && <CSpinner component="span" size="sm" variant="grow" aria-hidden="true" />}
+      <CButton type="submit" disabled={loading}>
+        {loading ? <CSpinner component="span" size="sm" variant="grow" aria-hidden="true" /> : null}
         Salvar
       </CButton>
     </CForm>
