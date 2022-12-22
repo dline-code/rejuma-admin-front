@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import {
   CButton,
   CRow,
@@ -9,29 +9,17 @@ import {
   CForm,
   CFormInput,
   CFormLabel,
-  CFormSelect,
   CModal,
   CModalBody,
   CModalFooter,
   CModalHeader,
   CModalTitle,
-  CTable,
-  CTableBody,
-  CTableDataCell,
-  CTableHead,
-  CTableHeaderCell,
-  CTableRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import Swal from 'sweetalert2'
 import { cilPlus as cilPlusIcon } from '@coreui/icons'
-import { TreatmentListItemActionsDropdown } from './components/ListItemActionsDropdown'
 import { useState } from 'react'
 import { SaveTreatmentForm } from './components/SaveTreatmentForm'
-// import { fetchTreatmentSalon } from './services/useFetchTreatmentSalon'
-import api from 'src/services/api'
-import { useHistory } from 'react-router-dom'
-import { subjectContext, useSubject } from './hooks/useSubject'
+import { useSubject } from './hooks/useSubject'
 import { useFilterSubject } from './hooks/useFilterSubject'
 import { Select } from './components/Select'
 import { Table } from './components/Table'
@@ -39,7 +27,8 @@ import { Table } from './components/Table'
 function Appointment() {
   const [isModalOpen, setIsModalOpen] = useState()
   const { handleDatas, subjectData, handleDeleteSubject } = useSubject()
-  const { searching, searchBySubject, setFilterBy, fields, filteredData } = useFilterSubject()
+  const { searchBySubject, setFilterBy, fields, filterBy } = useFilterSubject()
+  const [search, setSearch] = useState('')
   useEffect(() => {
     handleDatas()
   }, [])
@@ -47,7 +36,7 @@ function Appointment() {
   function handleFilterBy(event) {
     setFilterBy(event.target.value)
   }
-
+  const filteredData = filterBy.length ? searchBySubject(search) : []
   function handleEdit() {
     setIsModalOpen(true)
   }
@@ -88,7 +77,8 @@ function Appointment() {
                       className="mr-sm-2 w-80"
                       placeholder="Search"
                       id="pesq"
-                      onChange={searchBySubject}
+                      onChange={(e) => setSearch(e.target.value)}
+                      value={search}
                     />
                     {/* <CButton color="outline-info" className="my-2 my-sm-0" type="submit">
                       Search
@@ -123,7 +113,7 @@ function Appointment() {
                 <CFormInput type="search" id="exampleFormControlInput1" />
               </div>
             </div>
-            {searching ? (
+            {search ? (
               <Table
                 data={filteredData}
                 handleDeleteSubject={handleDeleteSubject}
