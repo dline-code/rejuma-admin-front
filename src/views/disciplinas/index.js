@@ -44,9 +44,8 @@ function Appointment() {
     handleDatas()
   }, [])
 
-  function handleFilterBy(e) {
-    console.log(e.target.value)
-    setFilterBy(e.target.value)
+  function handleFilterBy(event) {
+    setFilterBy(event.target.value)
   }
 
   function handleEdit() {
