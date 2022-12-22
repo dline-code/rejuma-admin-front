@@ -6,9 +6,10 @@ export const subjectContext = React.createContext({})
 
 export function SubjectContextProvider({ children }) {
   const [subjectData, setSubjectData] = useState([])
+  const [filterBy, setFilterBy] = useState([])
 
   return (
-    <subjectContext.Provider value={{ subjectData, setSubjectData }}>
+    <subjectContext.Provider value={{ subjectData, setSubjectData, filterBy, setFilterBy }}>
       {children}
     </subjectContext.Provider>
   )

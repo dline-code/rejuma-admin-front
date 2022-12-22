@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import {
   CButton,
   CRow,
@@ -31,7 +31,7 @@ import { SaveTreatmentForm } from './components/SaveTreatmentForm'
 // import { fetchTreatmentSalon } from './services/useFetchTreatmentSalon'
 import api from 'src/services/api'
 import { useHistory } from 'react-router-dom'
-import { useSubject } from './hooks/useSubject'
+import { subjectContext, useSubject } from './hooks/useSubject'
 import { useFilterSubject } from './hooks/useFilterSubject'
 import { Select } from './components/Select'
 import { Table } from './components/Table'
@@ -39,15 +39,20 @@ import { Table } from './components/Table'
 function Appointment() {
   const [isModalOpen, setIsModalOpen] = useState()
   const { handleDatas, subjectData, handleDeleteSubject } = useSubject()
-  const { filteredData, searching, searchBySubject, handlefilterBy } = useFilterSubject()
-
+  const { searching, searchBySubject, setFilterBy, fields, filteredData } = useFilterSubject()
   useEffect(() => {
     handleDatas()
   }, [])
 
+  function handleFilterBy(e) {
+    console.log(e.target.value)
+    setFilterBy(e.target.value)
+  }
+
   function handleEdit() {
     setIsModalOpen(true)
   }
+
   const handleClickNewAppointment = () => {
     setIsModalOpen((currentValue) => !currentValue)
   }
@@ -75,11 +80,7 @@ function Appointment() {
             <CForm>
               <CRow className="mb-3">
                 <CCol md="5">
-                  <Select
-                    label={'Filtrar por'}
-                    handlefilterBy={handlefilterBy}
-                    data={['disciplina', 'descrição']}
-                  />
+                  <Select label={'Filtrar por'} handleFilterBy={handleFilterBy} data={fields} />
                 </CCol>
                 <CCol md="7">
                   <CFormLabel htmlFor="pesq">Pesquisar</CFormLabel>

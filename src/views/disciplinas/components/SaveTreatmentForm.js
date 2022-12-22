@@ -24,7 +24,7 @@ export const SaveTreatmentForm = () => {
             {...register('nome', { required: 'Este campo é Obrigatório' })}
           />
         </div>
-        <span className="text-danger text-sm">{errors.nome?.message}</span>
+        {errors?.nome ? <span className="text-danger text-sm">{errors.nome?.message}</span> : null}
       </div>
       <div className="mb-3" width="100px">
         <CFormLabel htmlFor="curso">Descrição</CFormLabel>
