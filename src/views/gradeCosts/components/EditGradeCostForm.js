@@ -18,14 +18,11 @@ export const EditGradeCostForm = ({ gradeCostData }) => {
 
   const handleNewGradeCost = async (data) => {
     setLoading(true)
-    console.log(data)
     try {
-      const response = await updateGradeCost(data)
-      console.log(response)
+      await updateGradeCost(data.id, data)
       Swal.fire('Sucesso!', `Insreido com sucesso`, 'success')
       setLoading(false)
     } catch (error) {
-      console.log(error.response)
       Swal.fire('Erro!', `${error?.response?.data.error}`, 'error')
       setLoading(false)
     }
@@ -64,7 +61,7 @@ export const EditGradeCostForm = ({ gradeCostData }) => {
       </CRow>
 
       <CButton type="submit" disabled={loading || false}>
-        {loading && <CSpinner component="span" size="sm" variant="grow" aria-hidden="true" />}
+        {loading ? <CSpinner component="span" size="sm" variant="grow" aria-hidden="true" /> : null}
         Alterar
       </CButton>
     </CForm>

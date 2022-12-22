@@ -23,7 +23,9 @@ import { useHistory } from 'react-router-dom'
 import { TreatmentListItemActionsDropdown } from './components/ListItemActionsDropdown'
 import { CreateGradeCostForm } from './components/CreateGradeCostForm'
 import { useQuery } from 'react-query'
-import { getGradeCosts } from 'src/services/gradeCostsQueryMethods'
+import { deleteGradeCost, getGradeCosts } from 'src/services/gradeCostsQueryMethods'
+import Swal from 'sweetalert2'
+import { EditGradeCostForm } from './components/EditGradeCostForm'
 
 export default function GradeCosts() {
   useQuery('getsGradeCostData', async () => {
@@ -34,6 +36,8 @@ export default function GradeCosts() {
   })
 
   const [gradeCosts, setgradeCosts] = useState([])
+  const [currentGradeCosts, setCurrentgradeCosts] = useState({})
+  const [isGradeEdit, setIsGradeEdit] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState()
   const history = useHistory()
 
@@ -41,9 +45,34 @@ export default function GradeCosts() {
     setIsModalOpen(true)
   }
 
-  const handleEdit = () => {}
+  const handleEdit = (gradeCost) => {
+    setCurrentgradeCosts(gradeCost)
+    setIsGradeEdit(true)
+    setIsModalOpen(true)
+  }
 
-  const handleRemove = () => {}
+  const handleRemove = (id) => {
+    Swal.fire({
+      title: 'Tem a certeza que pretende eliminar?',
+      text: 'Você não será capaz de reverter isso!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Confirmar',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await deleteGradeCost(id)
+          Swal.fire('Sucesso', 'Removido com sucesso', 'success')
+        } catch (error) {
+          console.log(error?.response?.data)
+          Swal.fire('Erro', `${error?.resonse?.data?.error}`, 'error')
+        }
+        history.go(0)
+      }
+    })
+  }
 
   return (
     <>
@@ -52,7 +81,11 @@ export default function GradeCosts() {
           <CModalTitle>Inserir Classe e seus Preços </CModalTitle>
         </CModalHeader>
         <CModalBody>
-          <CreateGradeCostForm />
+          {isGradeEdit ? (
+            <EditGradeCostForm gradeCostData={currentGradeCosts} />
+          ) : (
+            <CreateGradeCostForm />
+          )}
         </CModalBody>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setIsModalOpen(false)}>
@@ -79,12 +112,14 @@ export default function GradeCosts() {
               <CIcon style={{ marginLeft: '10px' }} icon={cilPlusIcon} className="me-2" />
             </CButton>
           </div>
+
           <div className="mb-40">
             <div className="mb-3" width="100px">
               <CFormLabel htmlFor="exampleFormControlInput1">Pesquise por algo</CFormLabel>
               <CFormInput type="search" id="exampleFormControlInput1" />
             </div>
           </div>
+
           <CTable>
             <CTableHead>
               <CTableRow>
@@ -97,7 +132,7 @@ export default function GradeCosts() {
             <CTableBody>
               {gradeCosts?.map((gradeCost, idx) => (
                 <CTableRow key={gradeCost.id}>
-                  <CTableHeaderCell scope="row">{gradeCost.id}</CTableHeaderCell>
+                  <CTableHeaderCell scope="row">{idx + 1}</CTableHeaderCell>
                   <CTableDataCell>{gradeCost.classe}</CTableDataCell>
                   <CTableDataCell>{gradeCost.preco}</CTableDataCell>
                   <CTableDataCell>
