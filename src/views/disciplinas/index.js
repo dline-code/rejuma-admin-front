@@ -33,11 +33,13 @@ import api from 'src/services/api'
 import { useHistory } from 'react-router-dom'
 import { useSubject } from './hooks/useSubject'
 import { useFilterSubject } from './hooks/useFilterSubject'
+import { Select } from './components/Select'
+import { Table } from './components/Table'
 
 function Appointment() {
   const [isModalOpen, setIsModalOpen] = useState()
   const { handleDatas, subjectData, handleDeleteSubject } = useSubject()
-  const { fields, searching, filteredData, searchBySubject, handlefilterBy } = useFilterSubject()
+  const { filteredData, searching, searchBySubject, handlefilterBy } = useFilterSubject()
 
   useEffect(() => {
     handleDatas()
@@ -73,25 +75,19 @@ function Appointment() {
             <CForm>
               <CRow className="mb-3">
                 <CCol md="5">
-                  <CFormLabel htmlFor="selectSm">Filtrar por</CFormLabel>
-                  <CFormSelect name="selectSm" id="SelectLm" onChange={handlefilterBy}>
-                    <option value="null">Please select</option>
-                    {fields?.map((item, index) => (
-                      <option key={index} value={item}>
-                        {item}
-                      </option>
-                    ))}
-                    /
-                  </CFormSelect>
+                  <Select
+                    label={'Filtrar por'}
+                    handlefilterBy={handlefilterBy}
+                    data={['disciplina', 'descrição']}
+                  />
                 </CCol>
                 <CCol md="7">
                   <CFormLabel htmlFor="pesq">Pesquisar</CFormLabel>
                   <CForm inline>
                     <CFormInput
-                      className="mr-sm-2"
+                      className="mr-sm-2 w-80"
                       placeholder="Search"
                       id="pesq"
-                      style={{ width: '80%' }}
                       onChange={searchBySubject}
                     />
                     {/* <CButton color="outline-info" className="my-2 my-sm-0" type="submit">
@@ -127,45 +123,19 @@ function Appointment() {
                 <CFormInput type="search" id="exampleFormControlInput1" />
               </div>
             </div>
-            <CTable>
-              <CTableHead>
-                <CTableRow>
-                  <CTableHeaderCell scope="col">#</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Disciplina</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Descrição</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Ações</CTableHeaderCell>
-                </CTableRow>
-              </CTableHead>
-              <CTableBody>
-                {!searching
-                  ? subjectData?.map(({ id, nome }, idx) => (
-                      <CTableRow key={id}>
-                        <CTableHeaderCell scope="row">{idx + 1}</CTableHeaderCell>
-                        <CTableDataCell>{nome}</CTableDataCell>
-                        <CTableDataCell>{null}</CTableDataCell>
-                        <CTableDataCell>
-                          <TreatmentListItemActionsDropdown
-                            onEdit={handleEdit}
-                            onRemove={() => handleDeleteSubject(id)}
-                          />
-                        </CTableDataCell>
-                      </CTableRow>
-                    ))
-                  : filteredData?.map(({ id, nome }, idx) => (
-                      <CTableRow key={id}>
-                        <CTableHeaderCell scope="row">{idx + 1}</CTableHeaderCell>
-                        <CTableDataCell>{nome}</CTableDataCell>
-                        <CTableDataCell>{null}</CTableDataCell>
-                        <CTableDataCell>
-                          <TreatmentListItemActionsDropdown
-                            onEdit={handleEdit}
-                            onRemove={() => handleDeleteSubject(id)}
-                          />
-                        </CTableDataCell>
-                      </CTableRow>
-                    ))}
-              </CTableBody>
-            </CTable>
+            {searching ? (
+              <Table
+                data={filteredData}
+                handleDeleteSubject={handleDeleteSubject}
+                handleEdit={handleEdit}
+              />
+            ) : (
+              <Table
+                data={subjectData}
+                handleDeleteSubject={handleDeleteSubject}
+                handleEdit={handleEdit}
+              />
+            )}
           </CCardBody>
         </CCard>
       </div>

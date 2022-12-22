@@ -10,7 +10,6 @@ export function useFilterSubject() {
 
   function handlefilterBy(event) {
     const { value } = event.target
-    console.log(value)
     setFilterBy(value)
     if (filterBy === null) setFilteredData(null)
   }
@@ -40,8 +39,8 @@ export function useFilterSubject() {
   }
 
   return {
-    searchBySubject,
     filteredData,
+    searchBySubject,
     fields,
     searching,
     setSearching,
