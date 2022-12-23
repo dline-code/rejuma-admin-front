@@ -47,13 +47,13 @@ function Appointment() {
   const [isModalOpen, setIsModalOpen] = useState()
   const history = useHistory()
 
-  const handleFilterDataBy = (event) => {
+  const handleFilterData = (event) => {
     event.preventDefault()
 
-    const searchKind = event.target.elements.searchKind.value
+    const searchType = event.target.elements.searchType.value
     const searched = event.target.elements.searched.value.toLowerCase()
 
-    if (searchKind === 'description') {
+    if (searchType === 'description') {
       setShifts(data.filter(({ designacao }) => designacao.toLowerCase().includes(searched)))
     }
   }
@@ -79,7 +79,6 @@ function Appointment() {
           await deleteShift(turnoId)
           Swal.fire('Sucesso', 'Removido com sucesso', 'success')
         } catch (error) {
-          console.log(error?.response?.data)
           Swal.fire('Erro', `${error?.resonse?.data?.error}`, 'error')
         }
         history.go(0)
@@ -112,11 +111,11 @@ function Appointment() {
         <CCard>
           <CCardHeader>Dados de Pesquisa</CCardHeader>
           <CCardBody>
-            <CForm onSubmit={handleFilterDataBy}>
+            <CForm onSubmit={handleFilterData}>
               <CRow className="mb-3">
                 <CCol md="3">
-                  <CFormLabel htmlFor="searchKind">Filtrar por</CFormLabel>
-                  <CFormSelect defaultValue="" name="searchKind" id="searchKind">
+                  <CFormLabel htmlFor="searchType">Filtrar por</CFormLabel>
+                  <CFormSelect defaultValue="" name="searchType" id="searchType">
                     <option value="" disabled>
                       Please select
                     </option>
@@ -156,7 +155,7 @@ function Appointment() {
                 marginBottom: '20px',
               }}
             >
-              <h4>Cursos</h4>
+              <h4>Turnos</h4>
 
               <CButton onClick={handleOpenCreateShiftsModal} size="sm" color="primary">
                 Novo

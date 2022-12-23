@@ -22,7 +22,6 @@ export const CreateShiftsForm = () => {
       Swal.fire('Sucesso!', `Inserido com sucesso`, 'success')
       setLoading(false)
     } catch (error) {
-      console.log(error.response)
       Swal.fire('Erro!', `${error?.response?.data.error}`, 'error')
       setLoading(false)
     }
@@ -41,8 +40,8 @@ export const CreateShiftsForm = () => {
         <span style={{ color: 'red' }}>{errors.designacao?.message}</span>
       </CCol>
 
-      <CButton type="submit" disabled={loading || false}>
-        {loading && <CSpinner component="span" size="sm" variant="grow" aria-hidden="true" />}
+      <CButton type="submit" disabled={loading}>
+        {loading ? <CSpinner component="span" size="sm" variant="grow" aria-hidden="true" /> : null}
         Salvar
       </CButton>
     </CForm>
