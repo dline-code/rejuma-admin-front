@@ -66,7 +66,6 @@ export default function GradeCosts() {
           await deleteGradeCost(id)
           Swal.fire('Sucesso', 'Removido com sucesso', 'success')
         } catch (error) {
-          console.log(error?.response?.data)
           Swal.fire('Erro', `${error?.resonse?.data?.error}`, 'error')
         }
         history.go(0)
