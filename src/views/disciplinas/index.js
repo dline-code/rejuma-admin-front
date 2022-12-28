@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import {
   CButton,
   CRow,
@@ -19,7 +19,7 @@ import CIcon from '@coreui/icons-react'
 import { cilPlus as cilPlusIcon } from '@coreui/icons'
 import { useState } from 'react'
 import { SaveTreatmentForm } from './components/SaveTreatmentForm'
-import { useSubject } from './hooks/useSubject'
+import { subjectContext, useSubject } from './hooks/useSubject'
 import { useFilterSubject } from './hooks/useFilterSubject'
 import { Select } from './components/Select'
 import { Table } from './components/Table'
@@ -29,6 +29,8 @@ function Appointment() {
   const { handleDatas, subjectData, handleDeleteSubject } = useSubject()
   const { searchBySubject, setFilterBy, fields, filterBy } = useFilterSubject()
   const [search, setSearch] = useState('')
+  const { setInputFields, isEdting, setIsEdting } = useContext(subjectContext)
+
   useEffect(() => {
     handleDatas()
   }, [])
@@ -37,11 +39,15 @@ function Appointment() {
     setFilterBy(event.target.value)
   }
   const filteredData = filterBy.length ? searchBySubject(search) : []
-  function handleEdit() {
+
+  function handleEdit({ id, nome }) {
+    setInputFields({ id, nome })
+    setIsEdting(true)
     setIsModalOpen(true)
   }
 
   const handleClickNewAppointment = () => {
+    setIsEdting(false)
     setIsModalOpen((currentValue) => !currentValue)
   }
 
@@ -49,14 +55,18 @@ function Appointment() {
     <>
       <CModal visible={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <CModalHeader>
-          <CModalTitle>Inserir Disciplina </CModalTitle>
+          {isEdting ? (
+            <CModalTitle>Atualizar disciplina</CModalTitle>
+          ) : (
+            <CModalTitle>Inserir Disciplina</CModalTitle>
+          )}
         </CModalHeader>
         <CModalBody>
           <SaveTreatmentForm />
         </CModalBody>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setIsModalOpen(false)}>
-            Fechar
+            Fechar1
           </CButton>
         </CModalFooter>
       </CModal>

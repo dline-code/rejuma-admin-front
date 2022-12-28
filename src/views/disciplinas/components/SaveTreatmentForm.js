@@ -1,13 +1,15 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { CButton, CFormLabel, CFormInput, CSpinner } from '@coreui/react'
 import { useHistory } from 'react-router-dom'
 import api from 'src/services/api'
 import Swal from 'sweetalert2'
 import { useForm } from 'react-hook-form'
-import { useSubject } from '../hooks/useSubject'
+import { subjectContext, useSubject } from '../hooks/useSubject'
 
-export const SaveTreatmentForm = () => {
+export const SaveTreatmentForm = (props) => {
   const { handlePostSubject, setLoading, loading } = useSubject()
+  const { inputFields, isEdting, setIsEdting } = useContext(subjectContext)
+
   const {
     register,
     handleSubmit,
@@ -21,6 +23,7 @@ export const SaveTreatmentForm = () => {
         <div className="d-flex g-12">
           <CFormInput
             placeholder="Disciplina"
+            value={inputFields?.nome}
             {...register('nome', { required: 'Este campo é Obrigatório' })}
           />
         </div>

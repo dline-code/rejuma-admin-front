@@ -29,7 +29,8 @@ export function Table({ data, handleDeleteSubject, handleEdit }) {
               <CTableDataCell>{null}</CTableDataCell>
               <CTableDataCell>
                 <TreatmentListItemActionsDropdown
-                  onEdit={handleEdit}
+                  onEdit={() => handleEdit({ id, nome })}
+                  data={{ id, nome }}
                   onRemove={() => handleDeleteSubject(id)}
                 />
               </CTableDataCell>

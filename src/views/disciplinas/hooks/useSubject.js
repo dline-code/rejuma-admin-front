@@ -7,9 +7,22 @@ export const subjectContext = React.createContext({})
 export function SubjectContextProvider({ children }) {
   const [subjectData, setSubjectData] = useState([])
   const [filterBy, setFilterBy] = useState([])
+  const [inputFields, setInputFields] = useState({})
+  const [isEdting, setIsEdting] = useState(false)
 
   return (
-    <subjectContext.Provider value={{ subjectData, setSubjectData, filterBy, setFilterBy }}>
+    <subjectContext.Provider
+      value={{
+        subjectData,
+        inputFields,
+        isEdting,
+        setIsEdting,
+        setInputFields,
+        setSubjectData,
+        filterBy,
+        setFilterBy,
+      }}
+    >
       {children}
     </subjectContext.Provider>
   )
