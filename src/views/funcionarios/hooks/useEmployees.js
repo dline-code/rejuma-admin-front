@@ -6,7 +6,6 @@ export function useEmployees() {
 
   useEffect(async () => {
     const data = await fetchUserType()
-    console.log(data)
     setRole(data)
   }, [])
 

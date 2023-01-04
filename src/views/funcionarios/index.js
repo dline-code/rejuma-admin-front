@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import {
   CButton,
   CRow,
@@ -15,25 +15,17 @@ import {
   CModalFooter,
   CModalHeader,
   CModalTitle,
-  CTable,
-  CTableBody,
-  CTableDataCell,
-  CTableHead,
-  CTableHeaderCell,
-  CTableRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import Swal from 'sweetalert2'
 import { cilPlus as cilPlusIcon } from '@coreui/icons'
-import { FuncionariosListItemActionsDropdown } from './components/ListItemActionsDropdown'
 import { useState } from 'react'
 import { SaveTreatmentForm } from './components/SaveTreatmentForm'
-// import { fetchTreatmentSalon } from './services/useFetchTreatmentSalon'
-import api from 'src/services/api'
 import { useHistory } from 'react-router-dom'
 import { useEmployees } from './hooks/useEmployees'
 import { Table } from './components/table'
 import { DeleteFetchFunciarios, fetchFuncionarios } from './services/useFetchFuncionario'
+import { Select } from './components/Select'
 
 function Funcionarios() {
   const [filteredData, setFilteredData] = useState([])
@@ -41,19 +33,21 @@ function Funcionarios() {
   const [isModalOpen, setIsModalOpen] = useState()
   const [isfilter, setIsFilter] = useState(false)
   const history = useHistory()
+  const [search, setSearch] = useState('')
   const { role } = useEmployees()
-
-  const searchBy = (event) => {
-    const { value } = event.target
-    const newData = filteredData?.filter(
-      (item) => String(item[filterBy]).toLocaleLowerCase().indexOf(value.toLocaleLowerCase()) > -1,
-    )
-    setFilteredData(newData)
-  }
 
   const handleEdit = () => {
     console.log('delete')
     setIsModalOpen(true)
+  }
+
+  const resultSearch = filterBy.length ? searchData(search) : []
+
+  function searchData(search) {
+    const data = filteredData.filter((data) => {
+      return data?.nome?.toLowerCase().includes(search.toLowerCase())
+    })
+    return data
   }
 
   const handleRemove = (id) => {
@@ -86,17 +80,16 @@ function Funcionarios() {
   const fields = ['cargo']
 
   function handleFilterby(event) {
-    console.log(event.target.value)
     if (event?.target.value === 'cargo') {
+      setFilterBy('cargo')
       setIsFilter(true)
       return
     }
     setIsFilter(false)
   }
-  const handleFilter = async (desc) => {
-    console.log(desc)
-    const data = await fetchFuncionarios(desc)
-    console.log(data)
+  const handleFilter = async (event) => {
+    const { value } = event.target
+    const data = await fetchFuncionarios(value)
     setFilteredData(data)
   }
 
@@ -123,42 +116,19 @@ function Funcionarios() {
             <CForm>
               <CRow className="mb-3">
                 <CCol md="5">
-                  <CFormLabel htmlFor="selectSm">Filtrar por</CFormLabel>
-                  <CFormSelect name="selectSm" id="SelectLm" onChange={handleFilterby}>
-                    <option value="null">Please select</option>
-                    {fields?.map((item, index) => (
-                      <option key={index} value={item}>
-                        {item}
-                      </option>
-                    ))}
-                  </CFormSelect>
-                  {isfilter ? (
-                    <CFormSelect
-                      name="selectSm"
-                      className="mt-2"
-                      id="SelectLm"
-                      onChange={(e) => handleFilter(e?.target.value)}
-                    >
-                      <option value="null">Please select</option>
-                      {role?.map((item, index) => (
-                        <option key={index} value={item.designacao}>
-                          {item.designacao}
-                        </option>
-                      ))}
-                    </CFormSelect>
-                  ) : null}
+                  <Select label={'Filtrar por'} func={handleFilterby} data={fields} />
+                  {isfilter ? <Select data={role} func={handleFilter} label="Filtrar por" /> : null}
                 </CCol>
                 <CCol md="7">
-                  <CFormLabel htmlFor="pesq" onChange={(event) => setFilterBy(event.target.value)}>
-                    Pesquisar
-                  </CFormLabel>
+                  <CFormLabel htmlFor="pesq">Pesquisar</CFormLabel>
                   <CForm inline>
                     <CFormInput
                       className="mr-sm-2"
                       placeholder="Search"
                       id="pesq"
                       style={{ width: '80%' }}
-                      onChange={searchBy}
+                      onChange={(e) => setSearch(e.target.value)}
+                      value={search}
                     />
                     {/* <CButton color="outline-info" className="my-2 my-sm-0" type="submit">
                       Search
@@ -193,7 +163,11 @@ function Funcionarios() {
                 <CFormInput type="search" id="exampleFormControlInput1" />
               </div>
             </div>
-            <Table data={filteredData} handleEdit={handleEdit} handleRemove={handleRemove} />
+            {search ? (
+              <Table data={resultSearch} handleEdit={handleEdit} handleRemove={handleRemove} />
+            ) : (
+              <Table data={filteredData} handleEdit={handleEdit} handleRemove={handleRemove} />
+            )}
           </CCardBody>
         </CCard>
       </div>
