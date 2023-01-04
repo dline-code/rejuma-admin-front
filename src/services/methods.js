@@ -1,6 +1,6 @@
 import api from './api'
 
-export const getUsersKind = async () => {
+export const getUsersType = async () => {
   const response = await api.get(`/tipoUsuario/listar`)
   return response.data
 }
@@ -22,10 +22,5 @@ export const getClasses = async () => {
 
 export const getShiftS = async () => {
   const response = await api.get(`/turno/listar`)
-  return response.data
-}
-
-export const setenrollment = async (data) => {
-  const response = await api.post(`/matricula/post`, data)
   return response.data
 }

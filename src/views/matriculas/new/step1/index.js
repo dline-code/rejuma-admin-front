@@ -13,16 +13,17 @@ function Step1(props) {
   } = useForm()
 
   const validate = () => {
-    if (isValid) props.nextStep()
+    if (isValid) return
   }
 
   const handleIncrementApplicantInfo = (data) => {
     setApplicant(data)
+    props.nextStep()
   }
 
   return (
     <div>
-      <h2>Cadastro</h2>
+      <h4>Dados Pessoais</h4>
       <CForm onSubmit={handleSubmit(handleIncrementApplicantInfo)}>
         <CRow>
           <CCol>
@@ -36,31 +37,9 @@ function Step1(props) {
                 },
               })}
             />
-            <span style={{ color: 'red' }}>{errors.biNumber?.message}</span>
+            <span style={{ color: 'red' }}>{errors.n_BI?.message}</span>
           </CCol>
-          <CCol>
-            <CFormLabel> Natural </CFormLabel>
-            <CFormInput
-              placeholder="Provícia-Município"
-              {...register('natural', {
-                required: 'O local de nascimento é necessário',
-              })}
-            />
-            <span style={{ color: 'red' }}>{errors.emissionDate?.message}</span>
-          </CCol>
-          <CCol>
-            <CFormLabel> Nacionalidade </CFormLabel>
-            <CFormInput
-              {...register('nacionalidade', {
-                required: 'Informe a sua nacionalidade',
-              })}
-            />
-            <span style={{ color: 'red' }}>{errors.expirationDate?.message}</span>
-          </CCol>
-        </CRow>
-        <br />
 
-        <CRow>
           <CCol>
             <CFormLabel> Primeiro Nome </CFormLabel>
             <CFormInput
@@ -68,7 +47,7 @@ function Step1(props) {
                 required: 'O primeiro nome é necessário',
               })}
             />
-            <span style={{ color: 'red' }}>{errors.firstName?.message}</span>
+            <span style={{ color: 'red' }}>{errors.nome?.message}</span>
           </CCol>
 
           <CCol>
@@ -78,7 +57,31 @@ function Step1(props) {
                 required: 'Este nome é necessário',
               })}
             />
-            <span style={{ color: 'red' }}>{errors.lastName?.message}</span>
+            <span style={{ color: 'red' }}>{errors.sobrenome?.message}</span>
+          </CCol>
+        </CRow>
+
+        <br />
+
+        <CRow>
+          <CCol>
+            <CFormLabel> Natural </CFormLabel>
+            <CFormInput
+              placeholder="Provícia-Município"
+              {...register('natural', {
+                required: 'O local de nascimento é necessário',
+              })}
+            />
+            <span style={{ color: 'red' }}>{errors.natural?.message}</span>
+          </CCol>
+          <CCol>
+            <CFormLabel> Nacionalidade </CFormLabel>
+            <CFormInput
+              {...register('nacionalidade', {
+                required: 'Informe a sua nacionalidade',
+              })}
+            />
+            <span style={{ color: 'red' }}>{errors.nacionalidade?.message}</span>
           </CCol>
           <CCol>
             <CFormLabel> Data de Nascimento </CFormLabel>
@@ -88,9 +91,10 @@ function Step1(props) {
                 required: 'a Data de Nascimento é necessário',
               })}
             />
-            <span style={{ color: 'red' }}>{errors.birthDate?.message}</span>
+            <span style={{ color: 'red' }}>{errors.dataNascimento?.message}</span>
           </CCol>
         </CRow>
+
         <br />
         <CRow>
           <CCol>
@@ -100,7 +104,7 @@ function Step1(props) {
                 required: 'Este campo necessário',
               })}
             />
-            <span style={{ color: 'red' }}>{errors.fatherName?.message}</span>
+            <span style={{ color: 'red' }}>{errors.nome_do_pai?.message}</span>
           </CCol>
 
           <CCol>
@@ -110,7 +114,7 @@ function Step1(props) {
                 required: 'Este campo necessário',
               })}
             />
-            <span style={{ color: 'red' }}>{errors.motherName?.message}</span>
+            <span style={{ color: 'red' }}>{errors.nome_da_mae?.message}</span>
           </CCol>
         </CRow>
         <br />

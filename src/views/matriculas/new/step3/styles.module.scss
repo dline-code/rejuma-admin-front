@@ -1,20 +1,6 @@
 .confirmContainer {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.65rem;
-
-  p {
-    width: fit-content;
-    max-width: 20rem;
-    padding: 0.65rem;
-    font-size: larger;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    border: 1px solid #ccc;
-
-    span {
-      font-weight: bolder;
-      margin-right: 10px;
-    }
+  span {
+    font-weight: bolder;
+    margin-right: 10px;
   }
 }

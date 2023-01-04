@@ -7,7 +7,7 @@ import { useRecordsContext } from 'src/contexts/RecordsContext'
 
 function Step2(props) {
   const {
-    dataRecords: { grades, shifts, usersKind, classes },
+    dataRecords: { grades, courses, shifts, usersType, classes },
     setApplicant,
   } = useRecordsContext()
   const [showCurso, setShowCurso] = useState(true)
@@ -19,25 +19,24 @@ function Step2(props) {
   } = useForm()
 
   const handleChooseGrade = (event) => {
+    console.log('targetValue')
     const targetName = event.target.name
     const targetValue = event.target.value
 
-    if (targetName === 'classe') {
-      if (Number(targetValue) < 10) {
-        setShowCurso(false)
-      } else {
+    if (targetName === 'classeId') {
+      if (Number(targetValue.slice(0, 2)) >= 10) {
         setShowCurso(true)
+        return
       }
+      setShowCurso(false)
     }
   }
 
   const validate = () => {
-    if (isValid) console.log('valido')
+    if (isValid) return
   }
 
   const handleIncrementApplicantInfo = (data) => {
-    console.log(data)
-
     if (isValid) {
       props.nextStep()
       setApplicant((applicant) => ({
@@ -47,10 +46,9 @@ function Step2(props) {
     }
   }
 
-  console.log(usersKind)
   return (
     <div>
-      <h1>Dados pessoais</h1>
+      <h4>Informações Acádemicas</h4>
       <CForm onSubmit={handleSubmit(handleIncrementApplicantInfo)}>
         <CRow>
           <CCol>
@@ -58,7 +56,7 @@ function Step2(props) {
             <CFormSelect
               aria-label="Default select example"
               {...register('classeId', { required: 'Selecione uma classe' })}
-              onChange={handleChooseGrade}
+              onSelect={handleChooseGrade}
             >
               {grades.map((grade) => (
                 <option key={grade.id} value={grade.id}>
@@ -68,6 +66,7 @@ function Step2(props) {
             </CFormSelect>
             <span style={{ color: 'red' }}>{errors.classeId?.message}</span>
           </CCol>
+
           {showCurso && (
             <CCol>
               <CFormLabel> Curso </CFormLabel>
@@ -75,10 +74,11 @@ function Step2(props) {
                 aria-label="Default select example"
                 {...register('cursoId', { required: 'Selecione um curso' })}
               >
-                <option value="1">Informática</option>
-                <option value="2">Contablidade</option>
-                <option value="3">Pedagogia</option>
-                <option value="3">Gestão</option>
+                {courses.map((course) => (
+                  <option key={course.id} value={course.id}>
+                    {course.nome}
+                  </option>
+                ))}
               </CFormSelect>
               <span style={{ color: 'red' }}>{errors.cursoId?.message}</span>
             </CCol>
@@ -119,9 +119,9 @@ function Step2(props) {
               aria-label="Default select example"
               {...register('tipoUsuarioId', { required: 'Selecione a pessoa a ser matriculada' })}
             >
-              {usersKind.map((userkind) => (
-                <option key={userkind.id} value={userkind.id}>
-                  {userkind.designacao}
+              {usersType.map((userType) => (
+                <option key={userType.id} value={userType.id}>
+                  {userType.designacao}
                 </option>
               ))}
             </CFormSelect>

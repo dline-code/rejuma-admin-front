@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from 'react'
 import { useQuery } from 'react-query'
-import { getClasses, getGrade, getShiftS, getUsersKind } from 'src/services/methods'
+import { getClasses, getCourses, getGrade, getShiftS, getUsersType } from 'src/services/methods'
 
 const RecordsContext = createContext({})
 
@@ -8,19 +8,27 @@ export function RecordsContextProvider({ children }) {
   const [applicant, setApplicant] = useState({})
   const [dataRecords, setdataRecords] = useState({})
 
-  useQuery('RecordsData', async () => {
-    const shifts = await getShiftS()
-    const usersKind = await getUsersKind()
-    const grades = await getGrade()
-    const classes = await getClasses()
+  useQuery(
+    'RecordsData',
+    async () => {
+      const classes = await getClasses()
+      const courses = await getCourses()
+      const grades = await getGrade()
+      const shifts = await getShiftS()
+      const usersType = await getUsersType()
 
-    setdataRecords({
-      shifts,
-      usersKind,
-      grades,
-      classes,
-    })
-  })
+      setdataRecords({
+        classes,
+        courses,
+        grades,
+        shifts,
+        usersType,
+      })
+    },
+    {
+      staleTime: Infinity,
+    },
+  )
 
   return (
     <RecordsContext.Provider value={{ dataRecords, applicant, setApplicant }}>

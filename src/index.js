@@ -6,18 +6,18 @@ import App from './App'
 import * as serviceWorker from './serviceWorker'
 import { Provider } from 'react-redux'
 import store from './store'
-import { QueryClientProvider } from 'react-query'
-import { queryClient } from './services/queryClient'
 import { RecordsContextProvider } from './contexts/RecordsContext'
+import { queryClient } from './services/queryClient'
+import { QueryClientProvider } from 'react-query'
 
 ReactDOM.render(
-  <QueryClientProvider client={queryClient}>
-    <Provider store={store}>
+  <Provider store={store}>
+    <QueryClientProvider client={queryClient}>
       <RecordsContextProvider>
         <App />
       </RecordsContextProvider>
-    </Provider>
-  </QueryClientProvider>,
+    </QueryClientProvider>
+  </Provider>,
   document.getElementById('root'),
 )
 
