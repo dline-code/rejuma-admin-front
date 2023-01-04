@@ -27,7 +27,6 @@ import { useEnrollment } from './hooks'
 function Appointment() {
   const [matriculas, setMatriculas] = useState([])
   const { data } = useEnrollment(setMatriculas)
-  console.log(data)
   const [isModalOpen, setIsModalOpen] = useState()
 
   const handleCreateNewEnrollment = () => {
