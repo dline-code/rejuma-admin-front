@@ -31,13 +31,17 @@ import { SaveTreatmentForm } from './components/SaveTreatmentForm'
 // import { fetchTreatmentSalon } from './services/useFetchTreatmentSalon'
 import api from 'src/services/api'
 import { useHistory } from 'react-router-dom'
+import { useEmployees } from './hooks/useEmployees'
+import { Table } from './components/table'
+import { DeleteFetchFunciarios, fetchFuncionarios } from './services/useFetchFuncionario'
 
 function Funcionarios() {
-  const [treatmentSalon, setTreatmentSalon] = useState([])
-  const [filteredData, setFilteredData] = useState(treatmentSalon)
+  const [filteredData, setFilteredData] = useState([])
   const [filterBy, setFilterBy] = useState('')
   const [isModalOpen, setIsModalOpen] = useState()
+  const [isfilter, setIsFilter] = useState(false)
   const history = useHistory()
+  const { role } = useEmployees()
 
   const searchBy = (event) => {
     const { value } = event.target
@@ -47,23 +51,12 @@ function Funcionarios() {
     setFilteredData(newData)
   }
 
-  useEffect(() => {
-    const dataFunc = [
-      {
-        id: 1,
-        nome: 'Robson Manuel',
-        cargo: 'Dono',
-      },
-    ]
-    setTreatmentSalon(dataFunc)
-  }, [])
-
   const handleEdit = () => {
     console.log('delete')
     setIsModalOpen(true)
   }
 
-  const handleRemove = (treatmentSalonId) => {
+  const handleRemove = (id) => {
     Swal.fire({
       title: 'Tem a certeza que pretende eliminar?',
       text: 'Você não será capaz de reverter isso!',
@@ -75,7 +68,7 @@ function Funcionarios() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await api.delete(`/treatmentsalon/${treatmentSalonId}`)
+          await DeleteFetchFunciarios(id)
           Swal.fire('Sucesso', 'Removido com sucesso', 'success')
         } catch (error) {
           console.log(error?.response?.data)
@@ -90,7 +83,22 @@ function Funcionarios() {
     setIsModalOpen((currentValue) => !currentValue)
   }
 
-  const fields = ['nome', 'cargo']
+  const fields = ['cargo']
+
+  function handleFilterby(event) {
+    console.log(event.target.value)
+    if (event?.target.value === 'cargo') {
+      setIsFilter(true)
+      return
+    }
+    setIsFilter(false)
+  }
+  const handleFilter = async (desc) => {
+    console.log(desc)
+    const data = await fetchFuncionarios(desc)
+    console.log(data)
+    setFilteredData(data)
+  }
 
   return (
     <>
@@ -116,15 +124,29 @@ function Funcionarios() {
               <CRow className="mb-3">
                 <CCol md="5">
                   <CFormLabel htmlFor="selectSm">Filtrar por</CFormLabel>
-                  <CFormSelect name="selectSm" id="SelectLm" onChange={(e) => console.log(e)}>
+                  <CFormSelect name="selectSm" id="SelectLm" onChange={handleFilterby}>
                     <option value="null">Please select</option>
                     {fields?.map((item, index) => (
                       <option key={index} value={item}>
                         {item}
                       </option>
                     ))}
-                    /
                   </CFormSelect>
+                  {isfilter ? (
+                    <CFormSelect
+                      name="selectSm"
+                      className="mt-2"
+                      id="SelectLm"
+                      onChange={(e) => handleFilter(e?.target.value)}
+                    >
+                      <option value="null">Please select</option>
+                      {role?.map((item, index) => (
+                        <option key={index} value={item.designacao}>
+                          {item.designacao}
+                        </option>
+                      ))}
+                    </CFormSelect>
+                  ) : null}
                 </CCol>
                 <CCol md="7">
                   <CFormLabel htmlFor="pesq" onChange={(event) => setFilterBy(event.target.value)}>
@@ -171,31 +193,7 @@ function Funcionarios() {
                 <CFormInput type="search" id="exampleFormControlInput1" />
               </div>
             </div>
-            <CTable>
-              <CTableHead>
-                <CTableRow>
-                  <CTableHeaderCell scope="col">#</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Nome</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Cargo</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Ações</CTableHeaderCell>
-                </CTableRow>
-              </CTableHead>
-              <CTableBody>
-                {treatmentSalon?.map(({ id, nome, cargo }, idx) => (
-                  <CTableRow key={id}>
-                    <CTableHeaderCell scope="row">{idx + 1}</CTableHeaderCell>
-                    <CTableDataCell>{nome}</CTableDataCell>
-                    <CTableDataCell>{cargo}</CTableDataCell>
-                    <CTableDataCell>
-                      <FuncionariosListItemActionsDropdown
-                        onEdit={handleEdit}
-                        onRemove={() => handleRemove(id)}
-                      />
-                    </CTableDataCell>
-                  </CTableRow>
-                ))}
-              </CTableBody>
-            </CTable>
+            <Table data={filteredData} handleEdit={handleEdit} handleRemove={handleRemove} />
           </CCardBody>
         </CCard>
       </div>

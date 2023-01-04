@@ -1,7 +1,7 @@
 import api from 'src/services/api'
 
 const fetchFuncionarios = async (desc) => {
-  const funcionariosResponse = await api.get('/usuario/listarFuncionario', desc)
+  const funcionariosResponse = await api.get(`/usuario/listarFuncionario/${desc}`)
   return funcionariosResponse.data
 }
 const PostFetchFunciarios = async (data) => {
