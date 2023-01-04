@@ -3,6 +3,7 @@ import { CButton, CFormLabel, CFormInput, CFormSelect, CSpinner } from '@coreui/
 import { useHistory } from 'react-router-dom'
 import api from 'src/services/api'
 import Swal from 'sweetalert2'
+import { useEmployees } from '../hooks/useEmployees'
 // import { fetchTreatments } from '../services/useFetchTreatment'
 
 export const SaveTreatmentForm = () => {
@@ -11,16 +12,7 @@ export const SaveTreatmentForm = () => {
   const [price, setPrice] = useState('')
   const [loading, setLoading] = useState(false)
   const history = useHistory()
-
-  // useEffect(() => {
-  //   fetchTreatments()
-  //     .then((result) => {
-  //       setTreatments(result)
-  //     })
-  //     .catch((error) => {
-  //       console.log(error?.response)
-  //     })
-  // }, [])
+  const { role } = useEmployees()
 
   const handleSubmit = async () => {
     setLoading(true)
@@ -41,21 +33,6 @@ export const SaveTreatmentForm = () => {
     }
     history.go(0)
   }
-
-  const treatmentsAdapt = [
-    {
-      id: 1,
-      name: 'Professor',
-    },
-    {
-      id: 2,
-      name: 'Diretor',
-    },
-    {
-      id: 3,
-      name: 'Secretário',
-    },
-  ]
 
   return (
     <form>
@@ -78,11 +55,13 @@ export const SaveTreatmentForm = () => {
           onChange={(event) => setTreatmentId(event.target.value)}
         >
           <option>Selecione um cargo</option>
-          {treatmentsAdapt?.map(({ name, id }) => (
-            <option value={id} key={id}>
-              {name}
-            </option>
-          ))}
+          {role.length
+            ? role?.map(({ designacao, id }) => (
+                <option value={id} key={id}>
+                  {designacao}
+                </option>
+              ))
+            : null}
         </CFormSelect>
       </div>
 
