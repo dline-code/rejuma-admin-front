@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import {
   CButton,
   CRow,
@@ -9,61 +9,47 @@ import {
   CForm,
   CFormInput,
   CFormLabel,
-  CFormSelect,
   CModal,
   CModalBody,
   CModalFooter,
   CModalHeader,
   CModalTitle,
-  CTable,
-  CTableBody,
-  CTableDataCell,
-  CTableHead,
-  CTableHeaderCell,
-  CTableRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import Swal from 'sweetalert2'
 import { cilPlus as cilPlusIcon } from '@coreui/icons'
-import { FuncionariosListItemActionsDropdown } from './components/ListItemActionsDropdown'
 import { useState } from 'react'
 import { SaveTreatmentForm } from './components/SaveTreatmentForm'
-// import { fetchTreatmentSalon } from './services/useFetchTreatmentSalon'
-import api from 'src/services/api'
 import { useHistory } from 'react-router-dom'
+import { useEmployees } from './hooks/useEmployees'
+import { Table } from './components/table'
+import { DeleteFetchFunciarios, fetchFuncionarios } from './services/useFetchFuncionario'
+import { Select } from './components/Select'
 
 function Funcionarios() {
-  const [treatmentSalon, setTreatmentSalon] = useState([])
-  const [filteredData, setFilteredData] = useState(treatmentSalon)
+  const [filteredData, setFilteredData] = useState([])
   const [filterBy, setFilterBy] = useState('')
   const [isModalOpen, setIsModalOpen] = useState()
+  const [isfilter, setIsFilter] = useState(false)
   const history = useHistory()
-
-  const searchBy = (event) => {
-    const { value } = event.target
-    const newData = filteredData?.filter(
-      (item) => String(item[filterBy]).toLocaleLowerCase().indexOf(value.toLocaleLowerCase()) > -1,
-    )
-    setFilteredData(newData)
-  }
-
-  useEffect(() => {
-    const dataFunc = [
-      {
-        id: 1,
-        nome: 'Robson Manuel',
-        cargo: 'Dono',
-      },
-    ]
-    setTreatmentSalon(dataFunc)
-  }, [])
+  const [search, setSearch] = useState('')
+  const { role } = useEmployees()
 
   const handleEdit = () => {
     console.log('delete')
     setIsModalOpen(true)
   }
 
-  const handleRemove = (treatmentSalonId) => {
+  const resultSearch = filterBy.length ? searchData(search) : []
+
+  function searchData(search) {
+    const data = filteredData.filter((data) => {
+      return data?.nome?.toLowerCase().includes(search.toLowerCase())
+    })
+    return data
+  }
+
+  const handleRemove = (id) => {
     Swal.fire({
       title: 'Tem a certeza que pretende eliminar?',
       text: 'Você não será capaz de reverter isso!',
@@ -75,7 +61,7 @@ function Funcionarios() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await api.delete(`/treatmentsalon/${treatmentSalonId}`)
+          await DeleteFetchFunciarios(id)
           Swal.fire('Sucesso', 'Removido com sucesso', 'success')
         } catch (error) {
           console.log(error?.response?.data)
@@ -90,13 +76,27 @@ function Funcionarios() {
     setIsModalOpen((currentValue) => !currentValue)
   }
 
-  const fields = ['nome', 'cargo']
+  const fields = ['cargo']
+
+  function handleFilterby(event) {
+    if (event?.target.value === 'cargo') {
+      setFilterBy('cargo')
+      setIsFilter(true)
+      return
+    }
+    setIsFilter(false)
+  }
+  const handleFilter = async (event) => {
+    const { value } = event.target
+    const data = await fetchFuncionarios(value)
+    setFilteredData(data)
+  }
 
   return (
     <>
       <CModal visible={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <CModalHeader>
-          <CModalTitle>Inserir Funcionário </CModalTitle>
+          <CModalTitle>Inserir Funcionário</CModalTitle>
         </CModalHeader>
         <CModalBody>
           <SaveTreatmentForm />
@@ -115,28 +115,19 @@ function Funcionarios() {
             <CForm>
               <CRow className="mb-3">
                 <CCol md="5">
-                  <CFormLabel htmlFor="selectSm">Filtrar por</CFormLabel>
-                  <CFormSelect name="selectSm" id="SelectLm" onChange={(e) => console.log(e)}>
-                    <option value="null">Please select</option>
-                    {fields?.map((item, index) => (
-                      <option key={index} value={item}>
-                        {item}
-                      </option>
-                    ))}
-                    /
-                  </CFormSelect>
+                  <Select label={'Filtrar por'} func={handleFilterby} data={fields} />
+                  {isfilter ? <Select data={role} func={handleFilter} label="" /> : null}
                 </CCol>
                 <CCol md="7">
-                  <CFormLabel htmlFor="pesq" onChange={(event) => setFilterBy(event.target.value)}>
-                    Pesquisar
-                  </CFormLabel>
+                  <CFormLabel htmlFor="pesq">Pesquisar</CFormLabel>
                   <CForm inline>
                     <CFormInput
                       className="mr-sm-2"
                       placeholder="Search"
                       id="pesq"
                       style={{ width: '80%' }}
-                      onChange={searchBy}
+                      onChange={(e) => setSearch(e.target.value)}
+                      value={search}
                     />
                     {/* <CButton color="outline-info" className="my-2 my-sm-0" type="submit">
                       Search
@@ -171,31 +162,11 @@ function Funcionarios() {
                 <CFormInput type="search" id="exampleFormControlInput1" />
               </div>
             </div>
-            <CTable>
-              <CTableHead>
-                <CTableRow>
-                  <CTableHeaderCell scope="col">#</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Nome</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Cargo</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Ações</CTableHeaderCell>
-                </CTableRow>
-              </CTableHead>
-              <CTableBody>
-                {treatmentSalon?.map(({ id, nome, cargo }, idx) => (
-                  <CTableRow key={id}>
-                    <CTableHeaderCell scope="row">{idx + 1}</CTableHeaderCell>
-                    <CTableDataCell>{nome}</CTableDataCell>
-                    <CTableDataCell>{cargo}</CTableDataCell>
-                    <CTableDataCell>
-                      <FuncionariosListItemActionsDropdown
-                        onEdit={handleEdit}
-                        onRemove={() => handleRemove(id)}
-                      />
-                    </CTableDataCell>
-                  </CTableRow>
-                ))}
-              </CTableBody>
-            </CTable>
+            {search ? (
+              <Table data={resultSearch} handleEdit={handleEdit} handleRemove={handleRemove} />
+            ) : (
+              <Table data={filteredData} handleEdit={handleEdit} handleRemove={handleRemove} />
+            )}
           </CCardBody>
         </CCard>
       </div>
