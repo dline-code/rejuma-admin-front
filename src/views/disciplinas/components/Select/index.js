@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { CFormSelect, CFormLabel } from '@coreui/react'
 export function Select({ label, data, handleFilterBy }) {
   return (

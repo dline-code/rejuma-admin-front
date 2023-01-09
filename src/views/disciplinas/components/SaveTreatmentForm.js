@@ -1,19 +1,15 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import { CButton, CFormLabel, CFormInput, CSpinner } from '@coreui/react'
-import { useHistory } from 'react-router-dom'
-import api from 'src/services/api'
-import Swal from 'sweetalert2'
 import { useForm } from 'react-hook-form'
 import { subjectContext, useSubject } from '../hooks/useSubject'
 
 export const SaveTreatmentForm = (props) => {
-  const { handlePostSubject, setLoading, loading } = useSubject()
-  const { inputFields, isEdting, setIsEdting } = useContext(subjectContext)
+  const { handlePostSubject, loading } = useSubject()
+  const { inputFields } = useContext(subjectContext)
 
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm()
   return (

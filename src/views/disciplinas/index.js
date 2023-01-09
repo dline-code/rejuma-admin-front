@@ -33,7 +33,7 @@ function Appointment() {
 
   useEffect(() => {
     handleDatas()
-  }, [])
+  }, [handleDatas])
 
   function handleFilterBy(event) {
     setFilterBy(event.target.value)

@@ -1,22 +1,18 @@
 import React, { useState } from 'react'
 import { CButton, CFormLabel, CFormInput, CFormSelect, CSpinner } from '@coreui/react'
 import { useHistory } from 'react-router-dom'
-import api from 'src/services/api'
 import Swal from 'sweetalert2'
 import { useEmployees } from '../hooks/useEmployees'
 import { useForm } from 'react-hook-form'
 import { PostFetchFunciarios } from '../services/useFetchFuncionario'
 
 export const SaveTreatmentForm = () => {
-  const [treatmentId, setTreatmentId] = useState('')
-  const [price, setPrice] = useState('')
   const [loading, setLoading] = useState(false)
   const history = useHistory()
   const { role } = useEmployees()
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm()
 

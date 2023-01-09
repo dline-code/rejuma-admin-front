@@ -8,7 +8,7 @@ import styles from './styles.module.scss'
 function Step3(props) {
   const { lastStep, completeCallback } = props
   const {
-    dataRecords: { grades, courses, shifts, usersType, classes },
+    dataRecords: { grades, courses, shifts },
     applicant,
   } = useRecordsContext()
 

@@ -17,9 +17,12 @@ export function useEmployees() {
   const [role, setRole] = useState([])
   const fields = ['cargo']
 
-  useEffect(async () => {
-    const data = await fetchUserType()
-    setRole(data)
+  useEffect(() => {
+    async function fetchData() {
+      const data = await fetchUserType()
+      setRole(data)
+    }
+    fetchData()
   }, [])
 
   const handleFilter = async (event) => {
