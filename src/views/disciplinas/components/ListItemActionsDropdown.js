@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 
 import { CDropdown, CDropdownItem, CDropdownMenu, CDropdownToggle } from '@coreui/react'
 
 import PropTypes from 'prop-types'
+import { subjectContext } from '../hooks/useSubject'
 
 export const TreatmentListItemActionsDropdown = ({ onEdit, onRemove }) => {
   return (

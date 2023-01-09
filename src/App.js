@@ -3,6 +3,7 @@ import { HashRouter, Route, Switch } from 'react-router-dom'
 import './scss/style.scss'
 
 import { AuthProvider } from './contexts/AuthContext'
+import { SubjectContextProvider } from './views/disciplinas/hooks/useSubject'
 
 const loading = (
   <div className="pt-3 text-center">
