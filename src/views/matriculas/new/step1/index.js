@@ -1,118 +1,126 @@
-import React, { useState } from 'react'
-import { CForm, CFormInput, CFormLabel, CCol, CRow, CFormSelect } from '@coreui/react'
+import React from 'react'
+import { CForm, CFormInput, CFormLabel, CCol, CRow } from '@coreui/react'
 import ActionButtons from '../actionsButtons'
+import { useForm } from 'react-hook-form'
+import { useRecordsContext } from 'src/contexts/RecordsContext'
 
 function Step1(props) {
-  const [info1, setInfo1] = useState({})
-  const [userData, setUserData] = useState({})
-  const [error, setError] = useState('')
-
-  const onInputChanged = (event) => {
-    const targetName = event.target.name
-    const targetValue = event.target.value
-
-    setInfo1((info1) => ({
-      ...info1,
-      [targetName]: targetValue,
-    }))
-  }
+  const { setApplicant } = useRecordsContext()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm()
 
   const validate = () => {
-    if (!info1.firstName) setError('Preencha os campos obrigatórios(*)')
-    else {
-      setError('')
-      props.nextStep()
-      props.userCallback(info1)
-    }
+    if (isValid) return
   }
 
-  const fillField = (event) => {
-    console.log(userData)
-    fetch(`https://ka6xhw.deta.dev/bi/${event?.target?.value}`)
-      .then((response) => response.json())
-      .then((data) => {
-        if (data) {
-          setUserData(data[0])
-          console.log('biNumber', data[0])
-        }
-      })
-      .catch((error) => {
-        console.error('Error:', error)
-      })
+  const handleIncrementApplicantInfo = (data) => {
+    setApplicant(data)
+    props.nextStep()
   }
+
   return (
     <div>
-      <span style={{ color: 'red' }}>{error}</span>
-      <h2>Cadastro</h2>
-      <CForm>
+      <h4>Dados Pessoais</h4>
+      <CForm onSubmit={handleSubmit(handleIncrementApplicantInfo)}>
         <CRow>
           <CCol>
             <CFormLabel>Número do BI</CFormLabel>
-            <CFormInput name="biNumber" onChange={onInputChanged} onBlur={fillField} />
+            <CFormInput
+              {...register('n_BI', {
+                required: 'O Nº BI é necessário',
+                pattern: {
+                  value: /^[0-9]{9}[A-Z]{2}[0-9]{3}$/,
+                  message: 'Número de Bilhete está inválido',
+                },
+              })}
+            />
+            <span style={{ color: 'red' }}>{errors.n_BI?.message}</span>
           </CCol>
-          <CCol>
-            <CFormLabel> Data de Emissão </CFormLabel>
-            <CFormInput type="date" name="emissionDate" onChange={onInputChanged} />
-          </CCol>
-          <CCol>
-            <CFormLabel> Data de Expiração </CFormLabel>
-            <CFormInput type="date" name="expirationDate" onChange={onInputChanged} />
-          </CCol>
-        </CRow>
-        <br />
 
-        <CRow>
           <CCol>
             <CFormLabel> Primeiro Nome </CFormLabel>
-            <CFormInput name="firstName" onChange={onInputChanged} />
+            <CFormInput
+              {...register('nome', {
+                required: 'O primeiro nome é necessário',
+              })}
+            />
+            <span style={{ color: 'red' }}>{errors.nome?.message}</span>
           </CCol>
 
           <CCol>
             <CFormLabel> Último Nome </CFormLabel>
-            <CFormInput name="lastName" onChange={onInputChanged} />
+            <CFormInput
+              {...register('sobrenome', {
+                required: 'Este nome é necessário',
+              })}
+            />
+            <span style={{ color: 'red' }}>{errors.sobrenome?.message}</span>
+          </CCol>
+        </CRow>
+
+        <br />
+
+        <CRow>
+          <CCol>
+            <CFormLabel> Natural </CFormLabel>
+            <CFormInput
+              placeholder="Provícia-Município"
+              {...register('natural', {
+                required: 'O local de nascimento é necessário',
+              })}
+            />
+            <span style={{ color: 'red' }}>{errors.natural?.message}</span>
+          </CCol>
+          <CCol>
+            <CFormLabel> Nacionalidade </CFormLabel>
+            <CFormInput
+              {...register('nacionalidade', {
+                required: 'Informe a sua nacionalidade',
+              })}
+            />
+            <span style={{ color: 'red' }}>{errors.nacionalidade?.message}</span>
           </CCol>
           <CCol>
             <CFormLabel> Data de Nascimento </CFormLabel>
-            <CFormInput type="date" name="birthDate" onChange={onInputChanged} />
+            <CFormInput
+              type="date"
+              {...register('dataNascimento', {
+                required: 'a Data de Nascimento é necessário',
+              })}
+            />
+            <span style={{ color: 'red' }}>{errors.dataNascimento?.message}</span>
           </CCol>
         </CRow>
+
         <br />
         <CRow>
           <CCol>
-            <CFormLabel> Género </CFormLabel>
-            <CFormSelect
-              aria-label="Default select example"
-              name="gender"
-              onChange={onInputChanged}
-            >
-              <option value="Masculino">Masculino</option>
-              <option value="Feminino">Feminino</option>
-            </CFormSelect>
-          </CCol>
-          <CCol>
             <CFormLabel> Nome do Pai </CFormLabel>
-            <CFormInput name="fatherName" onChange={onInputChanged} />
+            <CFormInput
+              {...register('nome_do_pai', {
+                required: 'Este campo necessário',
+              })}
+            />
+            <span style={{ color: 'red' }}>{errors.nome_do_pai?.message}</span>
           </CCol>
 
           <CCol>
             <CFormLabel> Nome da Mãe </CFormLabel>
-            <CFormInput name="motherName" onChange={onInputChanged} />
-          </CCol>
-        </CRow>
-        <CRow>
-          <CCol>
-            <CFormLabel style={{ marginTop: '15px' }}> Documentos </CFormLabel>
             <CFormInput
-              type="file"
-              name="file"
-              onChange={onInputChanged}
-              style={{ width: '285px' }}
+              {...register('nome_da_mae', {
+                required: 'Este campo necessário',
+              })}
             />
+            <span style={{ color: 'red' }}>{errors.nome_da_mae?.message}</span>
           </CCol>
         </CRow>
+        <br />
+        <ActionButtons {...props} nextStep={validate} />
       </CForm>
       <br />
-      <ActionButtons {...props} nextStep={validate} />
     </div>
   )
 }

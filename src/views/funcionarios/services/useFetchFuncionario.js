@@ -1,9 +1,22 @@
 import api from 'src/services/api'
 
-const fetchFuncionarios = async () => {
-  const funcionariosResponse = await api.get('/treatment')
-
+const fetchFuncionarios = async (desc) => {
+  const funcionariosResponse = await api.get(`/usuario/listarFuncionario/${desc}`)
+  return funcionariosResponse.data
+}
+const PostFetchFunciarios = async (data) => {
+  const funcionariosResponse = await api.post('/usuario/post', data)
   return funcionariosResponse.data
 }
 
-export { fetchFuncionarios }
+const DeleteFetchFunciarios = async (id) => {
+  const funcionariosResponse = await api.delete(`/usuario/apagar/${id}`)
+  return funcionariosResponse.data
+}
+
+const fetchUserType = async () => {
+  const userTypeResponse = await api.get('/tipoUsuario/listar')
+  return userTypeResponse.data
+}
+
+export { fetchFuncionarios, PostFetchFunciarios, DeleteFetchFunciarios, fetchUserType }
