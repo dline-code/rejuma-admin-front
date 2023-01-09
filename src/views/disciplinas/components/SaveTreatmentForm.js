@@ -1,75 +1,43 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { CButton, CFormLabel, CFormInput, CSpinner } from '@coreui/react'
 import { useHistory } from 'react-router-dom'
 import api from 'src/services/api'
 import Swal from 'sweetalert2'
-// import { fetchTreatments } from '../services/useFetchTreatment'
+import { useForm } from 'react-hook-form'
+import { subjectContext, useSubject } from '../hooks/useSubject'
 
-export const SaveTreatmentForm = () => {
-  // const [treatments, setTreatments] = useState([])
-  const [treatmentId, setTreatmentId] = useState('')
-  const [price, setPrice] = useState('')
-  const [loading, setLoading] = useState(false)
-  const history = useHistory()
+export const SaveTreatmentForm = (props) => {
+  const { handlePostSubject, setLoading, loading } = useSubject()
+  const { inputFields, isEdting, setIsEdting } = useContext(subjectContext)
 
-  // useEffect(() => {
-  //   fetchTreatments()
-  //     .then((result) => {
-  //       setTreatments(result)
-  //     })
-  //     .catch((error) => {
-  //       console.log(error?.response)
-  //     })
-  // }, [])
-
-  const handleSubmit = async () => {
-    console.log(setTreatmentId)
-    setLoading(true)
-    try {
-      const salonId = JSON.parse(String(localStorage.getItem('user-id')))
-      const sendData = {
-        salonId,
-        price: Number(price),
-        treatmentId,
-      }
-      await api.post(`/treatmentsalon`, sendData)
-      Swal.fire('Sucesso!', `Insreido com sucesso`, 'success')
-      setLoading(false)
-    } catch (error) {
-      console.log(error.response)
-      Swal.fire('Erro!', `${error?.response?.data.error}`, 'error')
-      setLoading(false)
-    }
-    history.go(0)
-  }
-
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm()
   return (
-    <form>
+    <form onSubmit={handleSubmit(handlePostSubject)}>
       <div className="mb-3" width="100px">
         <CFormLabel htmlFor="disciplina">Disciplina</CFormLabel>
-        <div style={{ display: 'flex', gap: 12 }}>
+        <div className="d-flex g-12">
           <CFormInput
-            id="disciplina"
             placeholder="Disciplina"
-            required
-            onChange={(event) => setPrice(event.target.value)}
+            value={inputFields?.nome}
+            {...register('nome', { required: 'Este campo é Obrigatório' })}
           />
         </div>
+        {errors?.nome ? <span className="text-danger text-sm">{errors.nome?.message}</span> : null}
       </div>
       <div className="mb-3" width="100px">
         <CFormLabel htmlFor="curso">Descrição</CFormLabel>
-        <div style={{ display: 'flex', gap: 12 }}>
-          <CFormInput
-            id="description"
-            placeholder="Descrição da disciplina"
-            required
-            onChange={(event) => setPrice(event.target.value)}
-          />
+        <div className="d-flex g-12">
+          <CFormInput id="description" placeholder="Descrição da disciplina" />
         </div>
       </div>
 
-      <CButton disabled={loading || false} onClick={handleSubmit}>
-        {loading && <CSpinner component="span" size="sm" variant="grow" aria-hidden="true" />}
+      <CButton disabled={loading} type="submit">
+        {loading ? <CSpinner component="span" size="sm" variant="grow" aria-hidden="true" /> : null}
         Salvar
       </CButton>
     </form>
