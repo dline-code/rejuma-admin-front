@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useRef } from 'react'
 import {
   CButton,
   CRow,
@@ -27,38 +27,42 @@ import Swal from 'sweetalert2'
 import { cilPlus as cilPlusIcon } from '@coreui/icons'
 import { TreatmentListItemActionsDropdown } from './components/ListItemActionsDropdown'
 import { useState } from 'react'
-import { SaveTreatmentForm } from './components/SaveTreatmentForm'
-import api from 'src/services/api'
+import { CreateShiftsForm } from './components/CreateShiftsForm'
 import { useHistory } from 'react-router-dom'
-import { fetchTurnos } from './services/useFetchTurnos'
+import { EditShiftsForm } from './components/EditShiftsForm'
+import { useShift } from './hook/useShift'
+import { deleteShift } from './service/fetchMethods'
 
 function Appointment() {
-  const [turnos, setTurnos] = useState([])
-  const [filteredData, setFilteredData] = useState(turnos)
-  const [filterBy, setFilterBy] = useState('')
-  const [isModalOpen, setIsModalOpen] = useState()
   const history = useHistory()
+  const formFilterElement = useRef()
+  const [shifts, setShifts] = useState([])
+  const { data } = useShift(setShifts)
 
-  const searchBy = (event) => {
-    const { value } = event.target
-    const newData = filteredData?.filter(
-      (item) => String(item[filterBy]).toLocaleLowerCase().indexOf(value.toLocaleLowerCase()) > -1,
-    )
-    setFilteredData(newData)
+  const [currentShift, setCurrentShift] = useState({})
+  const [isShiftEdit, setisShiftEdit] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState()
+
+  const handleFilterData = () => {
+    const newData = []
+
+    const searchType = formFilterElement.current.searchType.value
+    const searched = formFilterElement.current.searched.value.toLowerCase()
+
+    data.forEach((item) => {
+      for (const key in item) {
+        if (key === searchType && item[key].toLowerCase().includes(searched)) {
+          newData.push(item)
+        }
+      }
+    })
+
+    setShifts(newData)
   }
 
-  useEffect(() => {
-    fetchTurnos()
-      .then((result) => {
-        console.log('turnos=>', result)
-        setTurnos(result)
-      })
-      .catch((error) => {
-        console.log(error?.response)
-      })
-  }, [])
-
-  const handleEdit = () => {
+  const handleEdit = (shift) => {
+    setCurrentShift(shift)
+    setisShiftEdit(true)
     setIsModalOpen(true)
   }
 
@@ -74,10 +78,9 @@ function Appointment() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await api.delete(`https://rejuma.herokuapp.com/turno/apagar/${turnoId}`)
+          await deleteShift(turnoId)
           Swal.fire('Sucesso', 'Removido com sucesso', 'success')
         } catch (error) {
-          console.log(error?.response?.data)
           Swal.fire('Erro', `${error?.resonse?.data?.error}`, 'error')
         }
         history.go(0)
@@ -85,20 +88,19 @@ function Appointment() {
     })
   }
 
-  const handleClickNewAppointment = () => {
+  const handleOpenCreateShiftsModal = () => {
+    setisShiftEdit(false)
     setIsModalOpen((currentValue) => !currentValue)
   }
-
-  const fields = ['designacao']
 
   return (
     <>
       <CModal visible={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <CModalHeader>
-          <CModalTitle>Inserir Curso </CModalTitle>
+          <CModalTitle>Turno </CModalTitle>
         </CModalHeader>
         <CModalBody>
-          <SaveTreatmentForm />
+          {isShiftEdit ? <EditShiftsForm shiftData={currentShift} /> : <CreateShiftsForm />}
         </CModalBody>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setIsModalOpen(false)}>
@@ -111,38 +113,34 @@ function Appointment() {
         <CCard>
           <CCardHeader>Dados de Pesquisa</CCardHeader>
           <CCardBody>
-            <div>
+            <CForm ref={formFilterElement}>
               <CRow className="mb-3">
                 <CCol md="5">
-                  <CFormLabel htmlFor="selectSm">Filtrar por</CFormLabel>
-                  <CFormSelect name="selectSm" id="SelectLm" onChange={(e) => console.log(e)}>
-                    <option value="null">Please select</option>
-                    {fields?.map((item, index) => (
-                      <option key={index} value={item}>
-                        {item}
-                      </option>
-                    ))}
-                    /
+                  <CFormLabel htmlFor="searchType">Filtrar por</CFormLabel>
+                  <CFormSelect defaultValue="" name="searchType" id="searchType">
+                    <option value="" disabled>
+                      Please select
+                    </option>
+                    <option value="designacao">Descrição</option>
                   </CFormSelect>
                 </CCol>
+
                 <CCol md="7">
-                  <CFormLabel htmlFor="pesq" onChange={(event) => setFilterBy(event.target.value)}>
-                    Pesquisar
-                  </CFormLabel>
-                  <CForm>
-                    <CFormInput
-                      className="mr-sm-2"
-                      placeholder="Search"
-                      id="pesq"
-                      style={{ width: '80%' }}
-                      onChange={searchBy}
-                    />
-                  </CForm>
+                  <CFormLabel htmlFor="searched">Pesquisar</CFormLabel>
+                  <CFormInput
+                    name="searched"
+                    className="mr-sm-2"
+                    placeholder="Pesquise aqui!"
+                    id="searched"
+                    style={{ width: '80%' }}
+                    onChange={handleFilterData}
+                  />
                 </CCol>
               </CRow>
-            </div>
+            </CForm>
           </CCardBody>
         </CCard>
+
         <br />
         <CCard>
           <CCardBody>
@@ -154,19 +152,14 @@ function Appointment() {
                 marginBottom: '20px',
               }}
             >
-              <h4>Cursos</h4>
+              <h4>Turnos</h4>
 
-              <CButton onClick={handleClickNewAppointment} size="sm" color="primary">
+              <CButton onClick={handleOpenCreateShiftsModal} size="sm" color="primary">
                 Novo
                 <CIcon style={{ marginLeft: '10px' }} icon={cilPlusIcon} className="me-2" />
               </CButton>
             </div>
-            <div className="mb-40">
-              <div className="mb-3" width="100px">
-                <CFormLabel htmlFor="exampleFormControlInput1">Pesquise por algo</CFormLabel>
-                <CFormInput type="search" id="exampleFormControlInput1" />
-              </div>
-            </div>
+
             <CTable>
               <CTableHead>
                 <CTableRow>
@@ -176,14 +169,14 @@ function Appointment() {
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {turnos?.map(({ id, designacao }, idx) => (
-                  <CTableRow key={id}>
+                {shifts?.map((shift, idx) => (
+                  <CTableRow key={shift.id}>
                     <CTableHeaderCell scope="row">{idx + 1}</CTableHeaderCell>
-                    <CTableDataCell>{designacao}</CTableDataCell>
+                    <CTableDataCell>{shift.designacao}</CTableDataCell>
                     <CTableDataCell>
                       <TreatmentListItemActionsDropdown
-                        onEdit={handleEdit}
-                        onRemove={() => handleRemove(id)}
+                        onEdit={() => handleEdit(shift)}
+                        onRemove={() => handleRemove(shift.id)}
                       />
                     </CTableDataCell>
                   </CTableRow>
