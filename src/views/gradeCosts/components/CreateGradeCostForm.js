@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { CButton, CFormLabel, CFormInput, CSpinner, CForm, CRow } from '@coreui/react'
 import Swal from 'sweetalert2'
-import { setNewGradeCost } from 'src/services/gradeCostsQueryMethods'
+import { setNewGradeCost } from '../services/fetchMethods'
 
 export const CreateGradeCostForm = () => {
   const {

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { CButton, CFormLabel, CFormInput, CSpinner, CForm, CRow } from '@coreui/react'
 import Swal from 'sweetalert2'
-import { updateGradeCost } from 'src/services/gradeCostsQueryMethods'
+import { updateGradeCost } from '../services/fetchMethods'
 
 export const EditGradeCostForm = ({ gradeCostData }) => {
   const {

@@ -22,20 +22,15 @@ import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { TreatmentListItemActionsDropdown } from './components/ListItemActionsDropdown'
 import { CreateGradeCostForm } from './components/CreateGradeCostForm'
-import { useQuery } from 'react-query'
-import { deleteGradeCost, getGradeCosts } from 'src/services/gradeCostsQueryMethods'
 import Swal from 'sweetalert2'
 import { EditGradeCostForm } from './components/EditGradeCostForm'
+import { useGradeCosts } from './hooks/useGradeCosts'
+import { deleteGradeCost } from './services/fetchMethods'
 
 export default function GradeCosts() {
-  useQuery('getsGradeCostData', async () => {
-    const response = await getGradeCosts()
-    setgradeCosts(response.data)
+  const [gradeCosts, setGradeCosts] = useState([])
+  const { data } = useGradeCosts(setGradeCosts)
 
-    return response.data
-  })
-
-  const [gradeCosts, setgradeCosts] = useState([])
   const [currentGradeCosts, setCurrentgradeCosts] = useState({})
   const [isGradeEdit, setIsGradeEdit] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState()
@@ -71,6 +66,15 @@ export default function GradeCosts() {
         history.go(0)
       }
     })
+  }
+
+  const handleFilterData = (event) => {
+    let newData = []
+
+    const searched = event.target.value.toLowerCase()
+
+    newData = data.filter(({ classe }) => classe.toLowerCase().includes(searched))
+    setGradeCosts(newData)
   }
 
   return (
@@ -115,7 +119,7 @@ export default function GradeCosts() {
           <div className="mb-40">
             <div className="mb-3" width="100px">
               <CFormLabel htmlFor="exampleFormControlInput1">Pesquise por algo</CFormLabel>
-              <CFormInput type="search" id="exampleFormControlInput1" />
+              <CFormInput type="search" id="exampleFormControlInput1" onChange={handleFilterData} />
             </div>
           </div>
 
