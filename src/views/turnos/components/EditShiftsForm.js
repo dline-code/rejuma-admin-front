@@ -3,7 +3,7 @@ import { CButton, CFormLabel, CFormInput, CSpinner, CForm, CCol } from '@coreui/
 import { useHistory } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import { useForm } from 'react-hook-form'
-import { updateShift } from 'src/services/shiftsQueryMethods'
+import { updateShift } from '../service/fetchMethods'
 
 export const EditShiftsForm = ({ shiftData }) => {
   const [newShift, setNewShift] = useState(shiftData)

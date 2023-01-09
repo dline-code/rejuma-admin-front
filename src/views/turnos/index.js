@@ -1,5 +1,4 @@
-import React from 'react'
-import { useQuery } from 'react-query'
+import React, { useRef } from 'react'
 import {
   CButton,
   CRow,
@@ -30,32 +29,35 @@ import { TreatmentListItemActionsDropdown } from './components/ListItemActionsDr
 import { useState } from 'react'
 import { CreateShiftsForm } from './components/CreateShiftsForm'
 import { useHistory } from 'react-router-dom'
-import { deleteShift, getShifts } from 'src/services/shiftsQueryMethods'
 import { EditShiftsForm } from './components/EditShiftsForm'
+import { useShift } from './hook/useShift'
+import { deleteShift } from './service/fetchMethods'
 
 function Appointment() {
-  const { data } = useQuery('ShiftsData', async () => {
-    const shifts = await getShifts()
-    setShifts(shifts.data)
-
-    return shifts.data
-  })
-
+  const history = useHistory()
+  const formFilterElement = useRef()
   const [shifts, setShifts] = useState([])
+  const { data } = useShift(setShifts)
+
   const [currentShift, setCurrentShift] = useState({})
   const [isShiftEdit, setisShiftEdit] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState()
-  const history = useHistory()
 
-  const handleFilterData = (event) => {
-    event.preventDefault()
+  const handleFilterData = () => {
+    const newData = []
 
-    const searchType = event.target.elements.searchType.value
-    const searched = event.target.elements.searched.value.toLowerCase()
+    const searchType = formFilterElement.current.searchType.value
+    const searched = formFilterElement.current.searched.value.toLowerCase()
 
-    if (searchType === 'description') {
-      setShifts(data.filter(({ designacao }) => designacao.toLowerCase().includes(searched)))
-    }
+    data.forEach((item) => {
+      for (const key in item) {
+        if (key === searchType && item[key].toLowerCase().includes(searched)) {
+          newData.push(item)
+        }
+      }
+    })
+
+    setShifts(newData)
   }
 
   const handleEdit = (shift) => {
@@ -111,15 +113,15 @@ function Appointment() {
         <CCard>
           <CCardHeader>Dados de Pesquisa</CCardHeader>
           <CCardBody>
-            <CForm onSubmit={handleFilterData}>
+            <CForm ref={formFilterElement}>
               <CRow className="mb-3">
-                <CCol md="3">
+                <CCol md="5">
                   <CFormLabel htmlFor="searchType">Filtrar por</CFormLabel>
                   <CFormSelect defaultValue="" name="searchType" id="searchType">
                     <option value="" disabled>
                       Please select
                     </option>
-                    <option value="description">Descrição</option>
+                    <option value="designacao">Descrição</option>
                   </CFormSelect>
                 </CCol>
 
@@ -131,13 +133,8 @@ function Appointment() {
                     placeholder="Pesquise aqui!"
                     id="searched"
                     style={{ width: '80%' }}
+                    onChange={handleFilterData}
                   />
-                </CCol>
-
-                <CCol style={{ marginTop: '30px' }}>
-                  <CButton color="outline-info" className="my-2 my-sm-0" type="submit">
-                    Search
-                  </CButton>
                 </CCol>
               </CRow>
             </CForm>

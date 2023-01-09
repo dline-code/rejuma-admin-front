@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import { CButton, CFormLabel, CFormInput, CSpinner, CForm, CCol } from '@coreui/react'
 import { useHistory } from 'react-router-dom'
 import Swal from 'sweetalert2'
-import { setNewShifts } from 'src/services/shiftsQueryMethods'
 import { useForm } from 'react-hook-form'
+import { setNewShifts } from '../service/fetchMethods'
 
 export const CreateShiftsForm = () => {
   const {
