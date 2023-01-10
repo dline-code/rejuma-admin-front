@@ -27,9 +27,12 @@ export function useEmployees() {
     fetchData()
   }, [])
 
-  useEffect(async () => {
-    const data = await fetchStateUserId()
-    setUserState(data)
+  useEffect(() => {
+    async function fetchData() {
+      const data = await fetchStateUserId()
+      setUserState(data)
+    }
+    fetchData()
   }, [])
 
   const handleFilter = async (event) => {
