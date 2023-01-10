@@ -47,8 +47,7 @@ export function useSubject() {
       setLoading(false)
       history.go('/disciplinas')
     } catch (error) {
-      console.log(error.response)
-      Swal.fire('Erro!', `Erro inesperdo!!`, 'error')
+      Swal.fire('Erro!', `Erro inesperdo!`, 'error')
       setLoading(false)
     }
   }
