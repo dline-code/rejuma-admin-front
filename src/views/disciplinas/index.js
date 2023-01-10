@@ -25,10 +25,11 @@ import { Table } from './components/Table'
 
 function Appointment() {
   const [isModalOpen, setIsModalOpen] = useState()
-  const { handleDatas, subjectData, handleDeleteSubject, setInputFields } = useSubject()
+  const { handleDatas, subjectData, handleDeleteSubject } = useSubject()
   const fields = ['disciplina', 'descrição']
   const [search, setSearch] = useState('')
   const [filterBy, setFilterBy] = useState([])
+  const [inputFields, setInputFields] = useState({})
 
   useEffect(() => {
     handleDatas()
@@ -66,7 +67,7 @@ function Appointment() {
           <CModalTitle>Inserir Disciplina</CModalTitle>
         </CModalHeader>
         <CModalBody>
-          <SaveTreatmentForm />
+          <SaveTreatmentForm inputFields={inputFields} setInputFields={setInputFields} />
         </CModalBody>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setIsModalOpen(false)}>
