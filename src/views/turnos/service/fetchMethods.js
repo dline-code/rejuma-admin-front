@@ -1,4 +1,4 @@
-import { api } from '../../../services/api'
+import api from '../../../services/api'
 
 export const setNewShifts = async (data) => {
   const response = await api.post(`/turno/post`, data)
