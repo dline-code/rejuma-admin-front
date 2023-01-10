@@ -13,7 +13,6 @@ export const SaveTreatmentForm = () => {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm()
 

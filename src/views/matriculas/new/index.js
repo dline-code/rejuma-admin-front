@@ -8,47 +8,39 @@ import Swal from 'sweetalert2'
 import Step1 from './step1'
 import Step2 from './step2'
 import Step3 from './step3'
+import { setEnrollment } from '../services/fetchMetheds'
+import { useEnrollment } from '../hooks'
 
-function NewMatricula({ setIsModalOpen, onFormData = { function() {} } }) {
-  const [_, setStepWizard] = useState(null)
-  const [user, setUser] = useState({})
+export function NewEnrollment({ setIsModalOpen }) {
+  const [, setStepWizard] = useState(null)
   const [activeStep, setActiveStep] = useState(0)
+  const { refetch } = useEnrollment()
 
   const assignStepWizard = (instance) => {
     setStepWizard(instance)
   }
 
   const handleStepChange = (e) => {
-    console.log(_)
     setActiveStep(e.activeStep - 1)
   }
 
-  const handleComplete = () => {
-    console.log('finnaly', user)
-    onFormData(user)
+  const handleCompleteEnrollment = (applicantData) => {
     Swal.fire({
       title: 'Tem certeza que deseja salvar?',
       showDenyButton: true,
       showCancelButton: true,
       confirmButtonText: 'Salvar',
       denyButtonText: `Não salvar`,
-    }).then((result) => {
-      /* Read more about isConfirmed, isDenied below */
+    }).then(async (result) => {
       if (result.isConfirmed) {
+        await setEnrollment(applicantData)
         Swal.fire('Salvo!', '', 'success')
         setIsModalOpen(false)
+        refetch()
       } else if (result.isDenied) {
         Swal.fire('Dados não inseridos', '', 'info')
       }
     })
-  }
-
-  const assignUser = (val) => {
-    console.log(val)
-    setUser((user) => ({
-      ...user,
-      ...val,
-    }))
   }
 
   return (
@@ -64,14 +56,12 @@ function NewMatricula({ setIsModalOpen, onFormData = { function() {} } }) {
             <Step label="Confirmar" />
           </Stepper>
           <StepWizard instance={assignStepWizard} onStepChange={handleStepChange}>
-            <Step1 userCallback={assignUser} />
-            <Step2 user={user} userCallback={assignUser} />
-            <Step3 user={user} completeCallback={handleComplete} />
+            <Step1 />
+            <Step2 />
+            <Step3 completeCallback={handleCompleteEnrollment} />
           </StepWizard>
         </CCardBody>
       </CCard>
     </CContainer>
   )
 }
-
-export default NewMatricula

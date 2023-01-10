@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const api = axios.create({
+export const api = axios.create({
   baseURL: 'https://seahorse-app-vdulm.ondigitalocean.app',
 })
 
@@ -11,5 +11,3 @@ api.interceptors.request.use((config) => {
   }
   return config
 })
-
-export default api
