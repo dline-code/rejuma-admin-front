@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { CButton, CFormLabel, CFormInput, CFormSelect, CSpinner } from '@coreui/react'
+import { CButton, CFormLabel, CFormInput, CFormSelect, CSpinner, CFormCheck } from '@coreui/react'
 import { useHistory } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import { useEmployees } from '../hooks/useEmployees'
@@ -9,7 +9,7 @@ import { PostFetchFunciarios } from '../services/useFetchFuncionario'
 export const SaveTreatmentForm = () => {
   const [loading, setLoading] = useState(false)
   const history = useHistory()
-  const { role } = useEmployees()
+  const { role, userState } = useEmployees()
   const {
     register,
     handleSubmit,
@@ -20,24 +20,22 @@ export const SaveTreatmentForm = () => {
     data = {
       ...data,
       senha: '1234',
-      estadoUsuarioId: 'fc270fbb-8ebd-4c08-9cef-7844256f3827',
     }
     setLoading(true)
     try {
       await PostFetchFunciarios(data)
       Swal.fire('Sucesso!', `Insreido com sucesso`, 'success')
       setLoading(false)
+      history.go('/treatment')
     } catch (error) {
-      console.log(error.response)
-      Swal.fire('Erro!', `${error?.response?.data.error}`, 'error')
+      Swal.fire('Erro!', `Erro inesperado`, 'error')
       setLoading(false)
     }
-    history.go(0)
   }
 
   return (
     <form onSubmit={handleSubmit(handleSubmitDatas)}>
-      {errors ? (
+      {errors.nome && errors.sobrenome && errors.dataNascimento && errors.tipoUsuarioId ? (
         <span className="text-danger text-sm ">(*) preencha todos os campos por favor</span>
       ) : null}
       <div className="mb-3" width="100px">
@@ -49,6 +47,7 @@ export const SaveTreatmentForm = () => {
           />
         </div>
       </div>
+      {errors.nome ? <span className="text-danger text-sm ">{errors?.nome.message}</span> : null}
       <div className="mb-3" width="100px">
         <CFormLabel htmlFor="nomeFuncionario">Sobrenome</CFormLabel>
         <div style={{ display: 'flex', gap: 12 }}>
@@ -58,8 +57,11 @@ export const SaveTreatmentForm = () => {
           />
         </div>
       </div>
+      {errors.sobrenome ? (
+        <span className="text-danger text-sm ">{errors?.sobrenome.message}</span>
+      ) : null}
       <div className="mb-3" width="100px">
-        <CFormLabel htmlFor="nomeFuncionario">Sobrenome</CFormLabel>
+        <CFormLabel htmlFor="nomeFuncionario">Data de Nascimento</CFormLabel>
         <div style={{ display: 'flex', gap: 12 }}>
           <input
             type="date"
@@ -76,6 +78,27 @@ export const SaveTreatmentForm = () => {
           />
         </div>
       </div>
+      {errors.dataNascimento ? (
+        <span className="text-danger text-sm ">{errors?.dataNascimento.message}</span>
+      ) : null}
+      <div className="mb-3" width="100px">
+        <CFormLabel htmlFor="nomeFuncionario">Selecione o estado</CFormLabel>
+        <div style={{ display: 'flex', gap: 12 }}>
+          {userState?.map((item) => (
+            <CFormCheck
+              key={item.id}
+              type="radio"
+              value={item?.id}
+              name="id"
+              label={item.designacao}
+              {...register('estadoUsuarioId', { required: 'campo obrigatorio' })}
+            />
+          ))}
+        </div>
+      </div>
+      {errors.estadoUsuarioId ? (
+        <span className="text-danger text-sm ">{errors?.dataNascimento.message}</span>
+      ) : null}
       <div className="mb-3" width="100px">
         <CFormLabel htmlFor="exampleFormControlInput1">Serviço</CFormLabel>
         <CFormSelect
@@ -92,6 +115,9 @@ export const SaveTreatmentForm = () => {
             : null}
         </CFormSelect>
       </div>
+      {errors.tipoUsuarioId ? (
+        <span className="text-danger text-sm ">{errors?.tipoUsuarioId.message}</span>
+      ) : null}
 
       <CButton disabled={loading || false} type="submit">
         {loading && <CSpinner component="span" size="sm" variant="grow" aria-hidden="true" />}

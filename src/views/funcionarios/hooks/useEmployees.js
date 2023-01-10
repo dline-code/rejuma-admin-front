@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import {
   DeleteFetchFunciarios,
   fetchFuncionarios,
+  fetchStateUserId,
   fetchUserType,
 } from '../services/useFetchFuncionario'
 import Swal from 'sweetalert2'
@@ -15,12 +16,21 @@ export function useEmployees() {
   const [search, setSearch] = useState('')
   const history = useHistory()
   const [role, setRole] = useState([])
+  const [userState, setUserState] = useState([])
   const fields = ['cargo']
 
   useEffect(() => {
     async function fetchData() {
       const data = await fetchUserType()
       setRole(data)
+    }
+    fetchData()
+  }, [])
+
+  useEffect(() => {
+    async function fetchData() {
+      const data = await fetchStateUserId()
+      setUserState(data)
     }
     fetchData()
   }, [])
@@ -84,5 +94,6 @@ export function useEmployees() {
     filterBy,
     setIsModalOpen,
     setSearch,
+    userState,
   }
 }

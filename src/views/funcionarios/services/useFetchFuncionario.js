@@ -19,4 +19,15 @@ const fetchUserType = async () => {
   return userTypeResponse.data
 }
 
-export { fetchFuncionarios, PostFetchFunciarios, DeleteFetchFunciarios, fetchUserType }
+const fetchStateUserId = async () => {
+  const stateUserIdResponse = await api.get('/estadoUsuario/listar')
+  return stateUserIdResponse.data
+}
+
+export {
+  fetchFuncionarios,
+  PostFetchFunciarios,
+  DeleteFetchFunciarios,
+  fetchUserType,
+  fetchStateUserId,
+}
