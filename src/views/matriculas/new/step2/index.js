@@ -7,7 +7,7 @@ import { useRecordsContext } from 'src/contexts/RecordsContext'
 
 function Step2(props) {
   const {
-    dataRecords: { grades, courses, shifts, usersType, classes },
+    dataRecords: { grades, courses, shifts },
     setApplicant,
   } = useRecordsContext()
   const [showCurso, setShowCurso] = useState(true)
@@ -96,36 +96,6 @@ function Step2(props) {
               ))}
             </CFormSelect>
             <span style={{ color: 'red' }}>{errors.turnoId?.message}</span>
-          </CCol>
-        </CRow>
-        <CRow>
-          <CCol>
-            <CFormLabel style={{ marginTop: '15px' }}> Turma </CFormLabel>
-            <CFormSelect
-              aria-label="Default select example"
-              {...register('turmaId', { required: 'Selecione a Turma' })}
-            >
-              {classes.map((classe) => (
-                <option key={classe.id} value={classe.id}>
-                  {classe.nome}
-                </option>
-              ))}
-            </CFormSelect>
-            <span style={{ color: 'red' }}>{errors.turmaId?.message}</span>
-          </CCol>
-          <CCol>
-            <CFormLabel style={{ marginTop: '15px' }}> A Matricular </CFormLabel>
-            <CFormSelect
-              aria-label="Default select example"
-              {...register('tipoUsuarioId', { required: 'Selecione a pessoa a ser matriculada' })}
-            >
-              {usersType.map((userType) => (
-                <option key={userType.id} value={userType.id}>
-                  {userType.designacao}
-                </option>
-              ))}
-            </CFormSelect>
-            <span style={{ color: 'red' }}>{errors.tipoUsuarioId?.message}</span>
           </CCol>
         </CRow>
         <br />

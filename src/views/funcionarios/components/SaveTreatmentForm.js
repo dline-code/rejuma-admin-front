@@ -19,8 +19,11 @@ export const SaveTreatmentForm = () => {
   const handleSubmitDatas = async (data) => {
     data = {
       ...data,
+      nome: `${data.nome} ${data.sobrenome}`,
       senha: '1234',
     }
+    delete data['sobrenome']
+    console.log('data=<', data)
     setLoading(true)
     try {
       await PostFetchFunciarios(data)
@@ -100,7 +103,7 @@ export const SaveTreatmentForm = () => {
         <span className="text-danger text-sm ">{errors?.dataNascimento.message}</span>
       ) : null}
       <div className="mb-3" width="100px">
-        <CFormLabel htmlFor="exampleFormControlInput1">Serviço</CFormLabel>
+        <CFormLabel htmlFor="exampleFormControlInput1">Cargo</CFormLabel>
         <CFormSelect
           aria-label="Default select example"
           {...register('tipoUsuarioId', { required: 'campo obrigatório' })}

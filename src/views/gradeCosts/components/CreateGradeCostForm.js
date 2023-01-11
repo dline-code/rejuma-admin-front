@@ -19,7 +19,7 @@ export const CreateGradeCostForm = () => {
     setLoading(true)
     try {
       await setNewGradeCost(data)
-      Swal.fire('Sucesso!', `Insreido com sucesso`, 'success')
+      Swal.fire('Sucesso!', `Inserido com sucesso`, 'success')
       setLoading(false)
     } catch (error) {
       Swal.fire('Erro!', `${error?.response?.data.error}`, 'error')
@@ -43,12 +43,13 @@ export const CreateGradeCostForm = () => {
       </CRow>
 
       <CRow className="mb-3" width="100px">
-        <CFormLabel htmlFor="preco">Preço da classeo</CFormLabel>
+        <CFormLabel htmlFor="preco">Valor de propina</CFormLabel>
         <CFormInput
           id="preco"
+          type="number"
           placeholder="Propina da Classe"
           {...register('preco', {
-            required: 'A descrição é necessário',
+            required: 'A descrição é necessária',
           })}
         />
         <span style={{ color: 'red' }}>{errors.preco?.message}</span>

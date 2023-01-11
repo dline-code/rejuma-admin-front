@@ -30,7 +30,10 @@ function Step3(props) {
               <span>Número de BI:</span>
               {applicant.n_BI}
             </CTableDataCell>
-            <CTableDataCell></CTableDataCell>
+            <CTableDataCell>
+              <span>Data Nascimento:</span>
+              {applicant.dataNascimento}
+            </CTableDataCell>
           </CTableRow>
 
           <CTableRow>
@@ -42,7 +45,11 @@ function Step3(props) {
               <span>Nome da Mãe:</span>
               {applicant.nome_da_mae}
             </CTableDataCell>
-            <CTableDataCell></CTableDataCell>
+
+            <CTableDataCell>
+              <span>Turno:</span>
+              {shifts.filter(({ id }) => id === applicant.turnoId)[0]?.designacao}
+            </CTableDataCell>
           </CTableRow>
 
           <CTableRow>
@@ -54,25 +61,19 @@ function Step3(props) {
               <span>Nacionalidade:</span>
               {applicant.nacionalidade}
             </CTableDataCell>
-            <CTableDataCell>
-              <span>Data Nascimento:</span>
-              {applicant.dataNascimento}
-            </CTableDataCell>
+            <CTableDataCell></CTableDataCell>
           </CTableRow>
 
           <CTableRow>
             <CTableDataCell>
-              <span>classe:</span>
+              <span>Classe:</span>
               {grades.filter(({ id }) => id === applicant.classeId)[0]?.classe}
             </CTableDataCell>
             <CTableDataCell>
-              <span>curso:</span>
+              <span>Curso:</span>
               {courses.filter(({ id }) => id === applicant.cursoId)[0]?.nome}
             </CTableDataCell>
-            <CTableDataCell>
-              <span>turno:</span>
-              {shifts.filter(({ id }) => id === applicant.turnoId)[0]?.designacao}
-            </CTableDataCell>
+            <CTableDataCell></CTableDataCell>
           </CTableRow>
         </CTableBody>
       </CTable>

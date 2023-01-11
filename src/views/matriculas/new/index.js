@@ -11,6 +11,9 @@ import Step3 from './step3'
 import { setEnrollment } from '../services/fetchMetheds'
 import { useEnrollment } from '../hooks'
 
+// TEMPORÁRIO.
+const USER_TYPE_STUDENT_ID = 'f12b1b88-fe70-45be-945d-f13d5e6f2da7'
+
 export function NewEnrollment({ setIsModalOpen }) {
   const [, setStepWizard] = useState(null)
   const [activeStep, setActiveStep] = useState(0)
@@ -33,7 +36,8 @@ export function NewEnrollment({ setIsModalOpen }) {
       denyButtonText: `Não salvar`,
     }).then(async (result) => {
       if (result.isConfirmed) {
-        await setEnrollment(applicantData)
+        console.log('applicantData', { ...applicantData, tipoUsuarioId: USER_TYPE_STUDENT_ID })
+        await setEnrollment({ ...applicantData, tipoUsuarioId: USER_TYPE_STUDENT_ID })
         Swal.fire('Salvo!', '', 'success')
         setIsModalOpen(false)
         refetch()

@@ -47,7 +47,7 @@ export const EditGradeCostForm = ({ gradeCostData }) => {
       </CRow>
 
       <CRow className="mb-3" width="100px">
-        <CFormLabel htmlFor="preco">Preço da classeo</CFormLabel>
+        <CFormLabel htmlFor="preco">Valor de propina</CFormLabel>
         <CFormInput
           id="preco"
           placeholder="Propina da Classe"
