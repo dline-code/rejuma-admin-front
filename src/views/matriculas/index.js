@@ -28,7 +28,7 @@ function Appointment() {
   const [matriculas, setMatriculas] = useState([])
   const { data } = useEnrollment(setMatriculas)
   const [isModalOpen, setIsModalOpen] = useState()
-  const [filterBy, setFilterBy] = useState('Nome')
+  const [filterBy, setFilterBy] = useState('name')
 
   const handleCreateNewEnrollment = () => {
     setIsModalOpen((currentValue) => !currentValue)
