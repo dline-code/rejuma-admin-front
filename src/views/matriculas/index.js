@@ -46,7 +46,7 @@ function Appointment() {
           return matriculaData
         }
       }
-      return
+      return []
     })
     setMatriculas(newData)
   }
