@@ -36,7 +36,6 @@ function Appointment() {
 
   const handleFilterData = (event) => {
     const searched = event?.target.value.toLowerCase()
-    console.log(data)
 
     const newData = data.filter((matriculaData) => {
       if (filterBy === 'name') {
