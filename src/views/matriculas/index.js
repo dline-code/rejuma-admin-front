@@ -28,26 +28,28 @@ function Appointment() {
   const [matriculas, setMatriculas] = useState([])
   const { data } = useEnrollment(setMatriculas)
   const [isModalOpen, setIsModalOpen] = useState()
+  const [filterBy, setFilterBy] = useState('Nome')
 
   const handleCreateNewEnrollment = () => {
     setIsModalOpen((currentValue) => !currentValue)
   }
 
   const handleFilterData = (event) => {
-    event.preventDefault()
-    const newData = []
+    const searched = event?.target.value.toLowerCase()
+    console.log(data)
 
-    const searchType = event.target.elements.searchType.value
-    const searched = event.target.elements.searched.value.toLowerCase()
-
-    data.forEach((matriculaData) => {
-      for (const key in matriculaData) {
-        if (key === searchType && matriculaData[key].toLowerCase().includes(searched)) {
-          newData.push(matriculaData)
+    const newData = data.filter((matriculaData) => {
+      if (filterBy === 'name') {
+        if (matriculaData.nome.toLowerCase().includes(searched)) {
+          return matriculaData
+        }
+      }
+      if (filterBy === 'biNumber') {
+        if (matriculaData.n_BI.toLowerCase().includes(searched)) {
+          return matriculaData
         }
       }
     })
-
     setMatriculas(newData)
   }
 
@@ -71,7 +73,7 @@ function Appointment() {
         <CCard className="mb-4">
           <CCardHeader>Dados de Pesquisa</CCardHeader>
           <CCardBody>
-            <FilterForm handleSubmit={handleFilterData} />
+            <FilterForm search={handleFilterData} setFilterBy={setFilterBy} />
           </CCardBody>
         </CCard>
 
@@ -99,7 +101,10 @@ function Appointment() {
 
               <CTableBody>
                 {matriculas?.map(
-                  ({ id, nome, sobrenome, createdAt, n_BI, dataNascimento }, idx) => (
+                  (
+                    { id, nome, sobrenome, createdAt, n_BI, dataNascimento, estadoUsuario },
+                    idx,
+                  ) => (
                     <CTableRow v-for="item in tableItems" key={id}>
                       <CTableDataCell>{idx + 1}</CTableDataCell>
                       <CTableDataCell>
@@ -109,14 +114,16 @@ function Appointment() {
                       <CTableDataCell className="text-center">{n_BI}</CTableDataCell>
                       <CTableDataCell className="text-center">{dataNascimento}</CTableDataCell>
                       <CTableDataCell className="text-center">
-                        <CRow>
-                          <CCol>
-                            <CButton color="success">Aprovar</CButton>
-                          </CCol>
-                          <CCol>
-                            <CButton color="danger">Rejeitar</CButton>
-                          </CCol>
-                        </CRow>
+                        {estadoUsuario === null ? null : (
+                          <CRow>
+                            <CCol>
+                              <CButton color="success">Aprovar</CButton>
+                            </CCol>
+                            <CCol>
+                              <CButton color="danger">Rejeitar</CButton>
+                            </CCol>
+                          </CRow>
+                        )}
                       </CTableDataCell>
                     </CTableRow>
                   ),

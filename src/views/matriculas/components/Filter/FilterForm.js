@@ -7,12 +7,12 @@ const fields = [
   { desc: 'Número de BI', value: 'biNumber' },
 ]
 
-export function FilterForm({ handleSubmit }) {
+export function FilterForm({ search, setFilterBy }) {
   return (
-    <CForm onSubmit={handleSubmit}>
+    <CForm>
       <CRow className="mb-3 d-flex align-items-end">
         <CCol md="3">
-          <FilterSelect fields={fields} />
+          <FilterSelect fields={fields} setFilterBy={setFilterBy} />
         </CCol>
         <CCol md="6">
           <CFormLabel htmlFor="search">Pesquisar</CFormLabel>
@@ -21,12 +21,8 @@ export function FilterForm({ handleSubmit }) {
             className="mr-sm-2"
             placeholder="Digite aqui a pesquisa"
             style={{ width: '80%' }}
+            onChange={search}
           />
-        </CCol>
-        <CCol md="3">
-          <CButton color="outline-info" className="my-2 my-sm-0" type="submit">
-            Search
-          </CButton>
         </CCol>
       </CRow>
     </CForm>
