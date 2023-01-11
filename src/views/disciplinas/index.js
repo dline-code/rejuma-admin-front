@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import {
   CButton,
   CRow,
@@ -19,35 +19,44 @@ import CIcon from '@coreui/icons-react'
 import { cilPlus as cilPlusIcon } from '@coreui/icons'
 import { useState } from 'react'
 import { SaveTreatmentForm } from './components/SaveTreatmentForm'
-import { subjectContext, useSubject } from './hooks/useSubject'
-import { useFilterSubject } from './hooks/useFilterSubject'
+import { useSubject } from './hooks/useSubject'
 import { Select } from './components/Select'
 import { Table } from './components/Table'
 
 function Appointment() {
   const [isModalOpen, setIsModalOpen] = useState()
   const { handleDatas, subjectData, handleDeleteSubject } = useSubject()
-  const { searchBySubject, setFilterBy, fields, filterBy } = useFilterSubject()
+  const fields = ['disciplina', 'descrição']
   const [search, setSearch] = useState('')
-  const { setInputFields, isEdting, setIsEdting } = useContext(subjectContext)
+  const [filterBy, setFilterBy] = useState([])
+  const [inputFields, setInputFields] = useState({})
 
   useEffect(() => {
     handleDatas()
   }, [handleDatas])
 
-  function handleFilterBy(event) {
-    setFilterBy(event.target.value)
+  function searchBySubject(search) {
+    if (!search?.length) {
+      return
+    }
+    if (filterBy === 'disciplina') {
+      const searchValue = search?.toLowerCase()
+      const newData = subjectData?.filter((item) => item?.nome.toLowerCase().includes(searchValue))
+      return newData
+    }
   }
-  const filteredData = filterBy.length ? searchBySubject(search) : []
+
+  function handleFilterBy(event) {
+    setFilterBy(event?.target.value)
+  }
+  const filteredData = filterBy?.length ? searchBySubject(search) : []
 
   function handleEdit({ id, nome }) {
     setInputFields({ id, nome })
-    setIsEdting(true)
     setIsModalOpen(true)
   }
 
   const handleClickNewAppointment = () => {
-    setIsEdting(false)
     setIsModalOpen((currentValue) => !currentValue)
   }
 
@@ -55,14 +64,10 @@ function Appointment() {
     <>
       <CModal visible={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <CModalHeader>
-          {isEdting ? (
-            <CModalTitle>Atualizar disciplina</CModalTitle>
-          ) : (
-            <CModalTitle>Inserir Disciplina</CModalTitle>
-          )}
+          <CModalTitle>Inserir Disciplina</CModalTitle>
         </CModalHeader>
         <CModalBody>
-          <SaveTreatmentForm />
+          <SaveTreatmentForm inputFields={inputFields} setInputFields={setInputFields} />
         </CModalBody>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setIsModalOpen(false)}>
@@ -120,7 +125,12 @@ function Appointment() {
             <div className="mb-40">
               <div className="mb-3" width="100px">
                 <CFormLabel htmlFor="exampleFormControlInput1">Pesquise por algo</CFormLabel>
-                <CFormInput type="search" id="exampleFormControlInput1" />
+                <CFormInput
+                  type="search"
+                  id="exampleFormControlInput1"
+                  onChange={(e) => setSearch(e.target.value)}
+                  value={search}
+                />
               </div>
             </div>
             {search ? (

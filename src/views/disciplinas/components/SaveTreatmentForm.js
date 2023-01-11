@@ -1,11 +1,11 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { CButton, CFormLabel, CFormInput, CSpinner } from '@coreui/react'
 import { useForm } from 'react-hook-form'
-import { subjectContext, useSubject } from '../hooks/useSubject'
+import { useSubject } from '../hooks/useSubject'
 
 export const SaveTreatmentForm = (props) => {
   const { handlePostSubject, loading } = useSubject()
-  const { inputFields } = useContext(subjectContext)
+  const { inputFields } = props
 
   const {
     register,

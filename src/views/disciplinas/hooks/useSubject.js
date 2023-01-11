@@ -1,35 +1,11 @@
 import Swal from 'sweetalert2'
 import { deleteFetchSubjects, fetchSubjects, postFecthSubject } from '../services/useFetchSubjects'
 import { useHistory } from 'react-router-dom'
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 export const subjectContext = React.createContext({})
 
-export function SubjectContextProvider({ children }) {
-  const [subjectData, setSubjectData] = useState([])
-  const [filterBy, setFilterBy] = useState([])
-  const [inputFields, setInputFields] = useState({})
-  const [isEdting, setIsEdting] = useState(false)
-
-  return (
-    <subjectContext.Provider
-      value={{
-        subjectData,
-        inputFields,
-        isEdting,
-        setIsEdting,
-        setInputFields,
-        setSubjectData,
-        filterBy,
-        setFilterBy,
-      }}
-    >
-      {children}
-    </subjectContext.Provider>
-  )
-}
-
 export function useSubject() {
-  const { subjectData, setSubjectData } = useContext(subjectContext)
+  const [subjectData, setSubjectData] = useState([])
   const history = useHistory()
   const [loading, setLoading] = useState(false)
 
@@ -54,29 +30,26 @@ export function useSubject() {
           await deleteFetchSubjects(id)
           Swal.fire('Sucesso', 'Removido com sucesso', 'success')
           handleDatas()
+          history.go('/disciplinas')
         } catch (error) {
-          console.log(error?.response?.data)
-          Swal.fire('Erro', `${error?.resonse?.data?.error}`, 'error')
+          Swal.fire('Erro', `Erro inesperado`, 'error')
         }
-        history.go('/disciplinas')
       }
     })
   }
 
   const handlePostSubject = async (data) => {
-    console.log(data)
     setLoading(true)
     try {
       await postFecthSubject(data)
       Swal.fire('Sucesso!', `Inserido com sucesso`, 'success')
       handleDatas()
       setLoading(false)
+      history.go('/disciplinas')
     } catch (error) {
-      console.log(error.response)
-      Swal.fire('Erro!', `${error?.response?.data.error}`, 'error')
+      Swal.fire('Erro!', `Erro inesperdo!`, 'error')
       setLoading(false)
     }
-    history.go('/disciplinas')
   }
   return {
     handleDatas,
