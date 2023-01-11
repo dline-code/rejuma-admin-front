@@ -33,10 +33,8 @@ function Appointment() {
   const handleCreateNewEnrollment = () => {
     setIsModalOpen((currentValue) => !currentValue)
   }
-
   const handleFilterData = (event) => {
     const searched = event?.target.value.toLowerCase()
-
     const newData = data.filter((matriculaData) => {
       if (filterBy === 'name') {
         if (matriculaData.nome.toLowerCase().includes(searched)) {
