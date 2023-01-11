@@ -46,6 +46,7 @@ function Appointment() {
           return matriculaData
         }
       }
+      return
     })
     setMatriculas(newData)
   }
