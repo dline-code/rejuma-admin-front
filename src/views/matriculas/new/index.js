@@ -36,7 +36,6 @@ export function NewEnrollment({ setIsModalOpen }) {
       denyButtonText: `Não salvar`,
     }).then(async (result) => {
       if (result.isConfirmed) {
-        console.log('applicantData', { ...applicantData, tipoUsuarioId: USER_TYPE_STUDENT_ID })
         await setEnrollment({ ...applicantData, tipoUsuarioId: USER_TYPE_STUDENT_ID })
         Swal.fire('Salvo!', '', 'success')
         setIsModalOpen(false)

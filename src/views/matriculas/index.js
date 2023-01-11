@@ -101,7 +101,7 @@ function Appointment() {
                 {matriculas?.map(
                   ({ id, nome, sobrenome, createdAt, n_BI, dataNascimento }, idx) => (
                     <CTableRow v-for="item in tableItems" key={id}>
-                      <CTableDataCell>{idx}</CTableDataCell>
+                      <CTableDataCell>{idx + 1}</CTableDataCell>
                       <CTableDataCell>
                         <div>{`${nome} ${sobrenome}`}</div>
                         <div className="small text-medium-emphasis">Registrado em: {createdAt}</div>
