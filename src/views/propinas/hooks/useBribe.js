@@ -17,9 +17,12 @@ export function useBribe() {
   const history = useHistory()
   const fields = ['mês']
 
-  useEffect(async () => {
+  async function fetchDatas() {
     const data = await getfetchMonth()
     setMonthData(data)
+  }
+  useEffect(() => {
+    fetchDatas()
   }, [])
   const handleFilter = async (event) => {
     const { value } = event.target
