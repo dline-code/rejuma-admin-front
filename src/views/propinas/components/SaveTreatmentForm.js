@@ -3,7 +3,7 @@ import { CButton, CFormLabel, CFormInput, CFormSelect, CSpinner } from '@coreui/
 import { useHistory } from 'react-router-dom'
 import api from 'src/services/api'
 import Swal from 'sweetalert2'
-import { fetchTreatments } from '../services/useFetchTreatment'
+import { fetchTreatments } from '../services/useFetchPropinas'
 
 export const SaveTreatmentForm = () => {
   const [treatments, setTreatments] = useState([])
