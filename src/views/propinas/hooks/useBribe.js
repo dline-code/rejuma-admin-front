@@ -29,7 +29,7 @@ export function useBribe() {
       setIsFilter(true)
       return
     }
-  }, [])
+  }, [filterBy])
   const handleFilter = async (event) => {
     const value = event?.target?.value
     const mes = value ? value : 'Janeiro'
