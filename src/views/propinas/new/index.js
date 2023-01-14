@@ -157,6 +157,9 @@ function NewPropinaPayment({ setIsModalOpen }) {
         <CCardBody>
           <CForm onSubmit={handleSubmit(handleSubmitDatas)}>
             <CContainer>
+              {errors?.estudanteId ? (
+                <span className="text-danger text-sm">{errors.estudanteId?.message}</span>
+              ) : null}
               <CRow>
                 <CCol>
                   <CFormLabel> Nome do Aluno </CFormLabel>
