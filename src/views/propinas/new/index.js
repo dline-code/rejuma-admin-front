@@ -123,7 +123,9 @@ function NewPropinaPayment({ setIsModalOpen }) {
     classData?.map((item) => {
       if (item.classe === classe) {
         setPrice(item?.preco)
+        return item
       }
+      return []
     })
   }
 
