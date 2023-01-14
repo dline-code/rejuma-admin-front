@@ -9,7 +9,7 @@ import {
 
 export function useBribe() {
   const [filteredData, setFilteredData] = useState([])
-  const [filterBy, setFilterBy] = useState('mes')
+  const [filterBy, setFilterBy] = useState('mês')
   const [isModalOpen, setIsModalOpen] = useState()
   const [isfilter, setIsFilter] = useState(false)
   const [search, setSearch] = useState('')
@@ -23,10 +23,17 @@ export function useBribe() {
   }
   useEffect(() => {
     fetchDatas()
-  }, [])
+    if (filterBy === 'mês') {
+      handleFilter()
+      setFilterBy('mês')
+      setIsFilter(true)
+      return
+    }
+  }, [filterBy])
   const handleFilter = async (event) => {
-    const { value } = event.target
-    const data = await getfetchPropinasByMonth(value)
+    const value = event?.target?.value
+    const mes = value ? value : 'Janeiro'
+    const data = await getfetchPropinasByMonth(mes)
     setFilteredData(data)
   }
 
