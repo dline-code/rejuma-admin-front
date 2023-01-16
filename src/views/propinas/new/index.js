@@ -10,7 +10,6 @@ import {
   CCol,
   CRow,
   CFormCheck,
-  CButton,
 } from '@coreui/react'
 import Swal from 'sweetalert2'
 import React, { useEffect } from 'react'
