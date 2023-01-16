@@ -10,7 +10,6 @@ import {
   CCol,
   CRow,
   CFormCheck,
-  CButton,
 } from '@coreui/react'
 import Swal from 'sweetalert2'
 import React, { useEffect } from 'react'
@@ -140,7 +139,8 @@ function NewPropinaPayment({ setIsModalOpen }) {
     setFilteredData(data)
   }
 
-  async function handleSubmitDatas(data) {
+  const handleSubmitDatas = async (data) => {
+    console.log(data)
     try {
       await postfetchPropinas(data)
       Swal.fire('Sucesso!', `Inserido com sucesso`, 'success')
@@ -277,7 +277,16 @@ function NewPropinaPayment({ setIsModalOpen }) {
                     alignItems: 'flex-end',
                   }}
                 >
-                  <CButton type="submit"> Adicionar Novo Pagamento </CButton>
+                  <CFormInput
+                    type="submit"
+                    className="bg-blue"
+                    value={'Adicionar Novo Pagamento'}
+                    style={{
+                      backgroundColor: '#321fdb',
+                      color: 'white',
+                      width: '20%',
+                    }}
+                  />
                 </CCol>
               </CRow>
             </CContainer>
