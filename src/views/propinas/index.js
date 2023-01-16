@@ -72,8 +72,20 @@ function Appointment() {
             <CForm>
               <CRow className="mb-3">
                 <CCol md="5">
-                  <Select label={'Filtrar por'} func={handleFilterby} data={fields} />
-                  {isfilter ? <Select data={monthData} func={handleFilter} label="" /> : null}
+                  <Select
+                    label={'Filtrar por'}
+                    title="por favor selecione um campo"
+                    func={handleFilterby}
+                    data={fields}
+                  />
+                  {isfilter ? (
+                    <Select
+                      data={monthData}
+                      title="por favor selecione o mês"
+                      func={handleFilter}
+                      label=""
+                    />
+                  ) : null}
                 </CCol>
                 <CCol md="7">
                   <CFormLabel htmlFor="pesq">Pesquisar</CFormLabel>

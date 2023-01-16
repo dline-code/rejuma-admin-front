@@ -21,15 +21,11 @@ export function useBribe() {
     const data = await getfetchMonth()
     setMonthData(data)
   }
+
   useEffect(() => {
     fetchDatas()
-    if (filterBy === 'mês') {
-      handleFilter()
-      setFilterBy('mês')
-      setIsFilter(true)
-      return
-    }
-  }, [filterBy])
+  }, [])
+
   const handleFilter = async (event) => {
     const value = event?.target?.value
     const mes = value ? value : 'Janeiro'
@@ -67,7 +63,11 @@ export function useBribe() {
   }
 
   function handleFilterby(event) {
+    if (filterBy) {
+      setFilteredData([])
+    }
     if (event?.target.value === null) {
+      setFilterBy(null)
       setIsFilter(false)
       return
     }
