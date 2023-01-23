@@ -74,7 +74,7 @@ function Appointment() {
         </CModalBody>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setIsModalOpen(false)}>
-            Fechar1
+            Fechar
           </CButton>
         </CModalFooter>
       </CModal>
