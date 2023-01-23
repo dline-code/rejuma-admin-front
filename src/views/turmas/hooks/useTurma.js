@@ -8,7 +8,7 @@ import {
   postFecthTurma,
 } from '../services/useFetchClass'
 import { useHistory } from 'react-router-dom'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export function useTurma() {
   const [turmaData, setTurmaData] = useState([])
@@ -29,6 +29,10 @@ export function useTurma() {
     setTurmaData(data)
     return data
   }
+
+  useEffect(() => {
+    handleDatas()
+  }, [])
 
   async function handleDeleteTurma(id) {
     Swal.fire({

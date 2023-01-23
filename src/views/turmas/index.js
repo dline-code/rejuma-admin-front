@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import {
   CButton,
   CRow,
@@ -25,15 +25,11 @@ import { Table } from './components/Table'
 
 function Appointment() {
   const [isModalOpen, setIsModalOpen] = useState()
-  const { handleDatas, turmaData, handleDeleteTurma } = useTurma()
+  const { turmaData, handleDeleteTurma } = useTurma()
   const fields = ['turma', 'classe']
   const [search, setSearch] = useState('')
   const [filterBy, setFilterBy] = useState([])
   const [inputFields, setInputFields] = useState({})
-
-  useEffect(() => {
-    handleDatas()
-  }, [])
 
   function searchBySubject(search) {
     if (!search?.length) {

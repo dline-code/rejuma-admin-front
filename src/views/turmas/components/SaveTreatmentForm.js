@@ -1,15 +1,11 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { CButton, CFormLabel, CFormInput, CSpinner, CFormSelect } from '@coreui/react'
 import { useForm } from 'react-hook-form'
 import { useTurma } from '../hooks/useTurma'
 
 export const SaveTreatmentForm = (props) => {
-  const { handlePostTurma, loading, classData, cursoData, turnoData, handleDatas } = useTurma()
+  const { handlePostTurma, loading, classData, cursoData, turnoData } = useTurma()
   const { inputFields } = props
-
-  useEffect(() => {
-    handleDatas()
-  }, [])
 
   const {
     register,
