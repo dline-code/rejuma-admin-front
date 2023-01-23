@@ -11,6 +11,7 @@ const Cursos = React.lazy(() => import('./views/cursos'))
 const Disciplinas = React.lazy(() => import('./views/disciplinas'))
 const Propinas = React.lazy(() => import('./views/propinas'))
 const GradeCosts = React.lazy(() => import('./views/gradeCosts'))
+const Turmas = React.lazy(() => import('./views/turmas'))
 
 const Turnos = React.lazy(() => import('./views/turnos'))
 const Estudantes = React.lazy(() => import('./views/estudantes'))
@@ -24,6 +25,7 @@ const routes = [
   { path: '/propinas', name: 'Propinas', component: Propinas },
   { path: '/prices', name: 'Preços por Classes', component: GradeCosts },
   { path: '/turnos', name: 'Turnos', component: Turnos },
+  { path: '/turmas', name: 'turmas', component: Turmas },
   { path: '/treatment', name: 'Appointment', component: Funcionarios },
   { path: '/charts', name: 'Charts', component: Charts },
   { path: '/estudantes', name: 'Estudantes', component: Estudantes },
