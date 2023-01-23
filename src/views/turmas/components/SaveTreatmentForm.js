@@ -59,11 +59,8 @@ export const SaveTreatmentForm = (props) => {
       </div>
       <div className="mb-3" width="100px">
         <CFormLabel htmlFor="exampleFormControlInput1">Curso</CFormLabel>
-        <CFormSelect
-          aria-label="Default select example"
-          {...register('cursoId', { required: 'campo obrigatório' })}
-        >
-          <option>Selecione um curso</option>
+        <CFormSelect aria-label="Default select example" {...register('cursoId')}>
+          <option value={null}>{null}</option>
           {cursoData.length
             ? cursoData?.map(({ nome, id }) => (
                 <option value={id} key={id}>
